@@ -11,4 +11,4 @@ binding = "ASSETS"
 [[d1_databases]]
 binding = "DB"
 database_name = "wakanda-guild-db"
-database_id = "COLE_AQUI_O_ID_DO_BANCO"
+database_id = "790e412c-676b-4714-8c1e-0242b7ff343f"
