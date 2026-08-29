@@ -657,8 +657,7 @@
 
 <script>
 (function(){
-  var DATA_KEY = 'mu-guild-registry-v1';
-  var STORAGE_SHARED = false; // dados pessoais deste dispositivo/conta
+  var API_URL = '/api/state';
   var state = null; // {guildName, members:[{id,name}], events:[{id,name,type,date,attendees:[memberId]}]}
   var openEventId = null;
   var activeTab = 'eventos';
@@ -666,6 +665,8 @@
   var drawing = false;
   var drawIntervalId = null;
   var openHistoricoEventId = null;
+  var lastSavedAt = null;
+  var syncing = false;
 
   var EVENT_TYPES = [
     'Maya - VIP','Maya - Principal',
@@ -724,9 +725,8 @@
   };
 
   function getWeekRange(dateStr){
-    // Semana de segunda a domingo, baseada na data informada
     var d = new Date(dateStr + 'T00:00:00');
-    var day = d.getDay(); // 0=Dom .. 6=Sáb
+    var day = d.getDay();
     var diffToMonday = (day === 0 ? -6 : 1 - day);
     var monday = new Date(d);
     monday.setDate(d.getDate() + diffToMonday);
@@ -777,7 +777,6 @@
   }
 
   function weightedDrawWithoutReplacement(entries, count){
-    // entries: [{name, weight}]
     var pool = entries.slice();
     var winners = [];
     for(var i=0;i<count && pool.length>0;i++){
@@ -792,37 +791,43 @@
     return { guildName: 'WAKANDA', members: [], events: [], draws: [], eventWeights: Object.assign({}, DEFAULT_EVENT_WEIGHTS) };
   }
 
-  async function loadData(){
+  function normalizeState(){
+    if(!state.members) state.members = [];
+    if(!state.events) state.events = [];
+    if(!state.draws) state.draws = [];
+    state.draws.forEach(function(d){
+      if(!d.pairs && d.winners){
+        d.pairs = d.winners.map(function(w){ return {winner:w, prize:''}; });
+        delete d.winners;
+      }
+      if(!d.pairs) d.pairs = [];
+      d.pairs.forEach(function(p){ if(typeof p.paid === 'undefined') p.paid = false; });
+      if(!d.participants) d.participants = [];
+      if(typeof d.eventId === 'undefined') d.eventId = null;
+    });
+    state.events.forEach(function(ev){
+      if(typeof ev.result === 'undefined') ev.result = null;
+      if(typeof ev.enemyGuild === 'undefined') ev.enemyGuild = '';
+    });
+    if(!state.eventWeights) state.eventWeights = {};
+    Object.keys(DEFAULT_EVENT_WEIGHTS).forEach(function(fam){
+      if(typeof state.eventWeights[fam] === 'undefined') state.eventWeights[fam] = DEFAULT_EVENT_WEIGHTS[fam];
+    });
+  }
+
+  async function loadData(silent){
     try{
-      var res = await window.storage.get(DATA_KEY, STORAGE_SHARED);
-      if(res && res.value){
-        state = JSON.parse(res.value);
-        if(!state.members) state.members = [];
-        if(!state.events) state.events = [];
-      if(!state.draws) state.draws = [];
-      state.draws.forEach(function(d){
-        if(!d.pairs && d.winners){
-          d.pairs = d.winners.map(function(w){ return {winner:w, prize:''}; });
-          delete d.winners;
-        }
-        if(!d.pairs) d.pairs = [];
-        d.pairs.forEach(function(p){ if(typeof p.paid === 'undefined') p.paid = false; });
-        if(!d.participants) d.participants = [];
-        if(typeof d.eventId === 'undefined') d.eventId = null;
-      });
-      state.events.forEach(function(ev){
-        if(typeof ev.result === 'undefined') ev.result = null;
-        if(typeof ev.enemyGuild === 'undefined') ev.enemyGuild = '';
-      });
-      if(!state.eventWeights) state.eventWeights = {};
-      Object.keys(DEFAULT_EVENT_WEIGHTS).forEach(function(fam){
-        if(typeof state.eventWeights[fam] === 'undefined') state.eventWeights[fam] = DEFAULT_EVENT_WEIGHTS[fam];
-      });
+      var res = await fetch(API_URL, { cache: 'no-store' });
+      var json = await res.json();
+      if(json){
+        state = json;
+        normalizeState();
       } else {
         state = defaultState();
       }
     }catch(e){
-      state = defaultState();
+      if(!state) state = defaultState();
+      if(!silent) setStatus('Não foi possível conectar ao servidor — mostrando dados locais.');
     }
     render();
   }
@@ -832,13 +837,43 @@
     clearTimeout(saveTimeout);
     saveTimeout = setTimeout(async function(){
       try{
-        var result = await window.storage.set(DATA_KEY, JSON.stringify(state), STORAGE_SHARED);
-        if(showStatus) setStatus(result ? 'Salvo.' : 'Falha ao salvar. Tente novamente.');
+        var res = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(state)
+        });
+        var result = await res.json();
+        lastSavedAt = result && result.updated_at;
+        if(showStatus) setStatus(result && result.ok ? 'Salvo.' : 'Falha ao salvar. Tente novamente.');
       }catch(e){
-        setStatus('Erro ao salvar: ' + (e && e.message ? e.message : 'desconhecido'));
+        setStatus('Erro ao salvar: sem conexão com o servidor.');
       }
     }, 250);
   }
+
+  // Sincroniza com o que outras pessoas da guild salvaram, sem atrapalhar quem está digitando
+  function isUserTyping(){
+    var el = document.activeElement;
+    if(!el) return false;
+    var tag = el.tagName;
+    return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+  }
+
+  async function pollForUpdates(){
+    if(syncing || drawing || isUserTyping() || pendingDelete) return;
+    syncing = true;
+    try{
+      var res = await fetch(API_URL, { cache: 'no-store' });
+      var json = await res.json();
+      if(json && JSON.stringify(json) !== JSON.stringify(state)){
+        state = json;
+        normalizeState();
+        render();
+      }
+    }catch(e){ /* silencioso — mantém os dados atuais na tela */ }
+    syncing = false;
+  }
+  setInterval(pollForUpdates, 12000);
 
   function setStatus(msg){
     var el = document.getElementById('status-msg');
@@ -939,42 +974,9 @@
     return String(s||'').replace(/[\/\\:*?"<>|]+/g,'-').replace(/\s+/g,' ').trim();
   }
 
-  var DRIVE_FOLDER_ID = '1Dq0GwzC6yihyj1d-1JgxyZ9jLZ7w1RBS';
   var DRIVE_FOLDER_URL = 'https://drive.google.com/drive/folders/1Dq0GwzC6yihyj1d-1JgxyZ9jLZ7w1RBS?usp=sharing';
 
-  async function uploadFileToDrive(base64Data, fileName){
-    try{
-      var response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 1000,
-          messages: [{
-            role: 'user',
-            content: 'Use the connected Google Drive tool to create a new binary .xlsx file inside the Drive folder with ID "'+DRIVE_FOLDER_ID+'". File name: "'+fileName+'". The file content is the following base64-encoded XLSX data — decode it and upload it as-is (do not treat it as text). Reply only confirming success or describing the error.\n\nBASE64_XLSX:\n'+base64Data
-          }],
-          mcp_servers: [{ type: 'url', url: 'https://drivemcp.googleapis.com/mcp/v1', name: 'google-drive' }]
-        })
-      });
-      if(!response.ok){
-        return { ok:false, message: 'Download local concluído, mas o envio ao Drive falhou (HTTP '+response.status+'). Envie manualmente pela pasta.' };
-      }
-      var data = await response.json();
-      var content = data.content || [];
-      var toolResults = content.filter(function(b){ return b.type === 'mcp_tool_result'; });
-      var toolErrors = toolResults.filter(function(b){ return b.is_error; });
-      var textBlocks = content.filter(function(b){ return b.type==='text'; }).map(function(b){ return b.text; }).join(' ');
-      if(toolResults.length > 0 && toolErrors.length === 0){
-        return { ok:true, message: 'Planilha baixada e enviada para a pasta do Google Drive.' };
-      }
-      return { ok:false, message: 'Download local concluído. Envio automático ao Drive não confirmado — envie manualmente pela pasta.' };
-    }catch(e){
-      return { ok:false, message: 'Download local concluído, mas não consegui conectar ao Google Drive agora. Envie manualmente pela pasta.' };
-    }
-  }
-
-  async function autoExportDraw(d){
+  function autoExportDraw(d){
     if(typeof XLSX === 'undefined'){
       setStatus('Sorteio salvo, mas a biblioteca de planilha não carregou — exporte manualmente depois.');
       return;
@@ -1014,13 +1016,10 @@
 
     var fileName = sanitizeFileName(d.date + ', Sorteio - ' + eventLabel) + '.xlsx';
     XLSX.writeFile(wb, fileName);
-    setStatus('Resultado do sorteio salvo. Enviando cópia para o Google Drive...');
-    var base64 = XLSX.write(wb, { bookType:'xlsx', type:'base64' });
-    var result = await uploadFileToDrive(base64, fileName);
-    setStatus(result.message);
+    setStatus('Resultado do sorteio salvo e planilha baixada.');
   }
 
-  async function exportToExcel(){
+  function exportToExcel(){
     if(typeof XLSX === 'undefined'){
       setStatus('Biblioteca de exportação não carregou. Verifique sua conexão.');
       return;
@@ -1078,13 +1077,10 @@
     var todayStr = new Date().toISOString().slice(0,10);
     var fileName = sanitizeFileName(todayStr + ', ' + (state.guildName || 'guild') + ' - presencas') + '.xlsx';
     XLSX.writeFile(wb, fileName);
-    setStatus('Planilha baixada. Enviando cópia para o Google Drive...');
-    var base64 = XLSX.write(wb, { bookType:'xlsx', type:'base64' });
-    var result = await uploadFileToDrive(base64, fileName);
-    setStatus(result.message);
+    setStatus('Planilha baixada.');
   }
 
-  async function exportEventToExcel(eventId){
+  function exportEventToExcel(eventId){
     if(typeof XLSX === 'undefined'){
       setStatus('Biblioteca de exportação não carregou. Verifique sua conexão.');
       return;
@@ -1119,10 +1115,7 @@
 
     var fileName = sanitizeFileName(ev.date + ', ' + ev.name) + '.xlsx';
     XLSX.writeFile(wb, fileName);
-    setStatus('Planilha do evento baixada. Enviando cópia para o Google Drive...');
-    var base64 = XLSX.write(wb, { bookType:'xlsx', type:'base64' });
-    var result = await uploadFileToDrive(base64, fileName);
-    setStatus(result.message);
+    setStatus('Planilha do evento baixada.');
   }
 
   function resetAll(){
@@ -1619,7 +1612,6 @@
     var hist = document.getElementById('draw-history-container');
     if(hist) hist.innerHTML = renderDrawHistoryHTML();
     attachPayToggleListeners(document);
-    // Re-conecta o botão de excluir sorteio, já que o histórico foi reescrito
     document.querySelectorAll('[data-del-draw]').forEach(function(btn){
       btn.addEventListener('click', function(){
         var id = this.getAttribute('data-del-draw');
@@ -2064,6 +2056,7 @@
     '<div class="toolbar">' +
       '<div class="row">' +
         '<button class="btn btn-arcane" id="export-btn">Exportar para Excel</button>' +
+        '<button class="btn btn-ghost" id="refresh-btn" title="Buscar atualizações de outros membros">Atualizar</button>' +
         '<a class="btn btn-ghost" href="'+DRIVE_FOLDER_URL+'" target="_blank" rel="noopener">Abrir pasta do Drive</a>' +
         '<button class="btn btn-ghost" id="reset-btn">'+(pendingDelete && pendingDelete.kind==='all' ? 'Confirmar reinício' : 'Reiniciar dados')+'</button>' +
       '</div>' +
@@ -2190,6 +2183,9 @@
 
     var exportBtn = document.getElementById('export-btn');
     if(exportBtn) exportBtn.addEventListener('click', exportToExcel);
+
+    var refreshBtn = document.getElementById('refresh-btn');
+    if(refreshBtn) refreshBtn.addEventListener('click', function(){ loadData(false); setStatus('Dados atualizados.'); });
 
     var resetBtn = document.getElementById('reset-btn');
     if(resetBtn){
