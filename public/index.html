@@ -126,23 +126,28 @@
   /* Tabs */
   .tabs{
     display:flex;
+    flex-wrap:wrap;
     gap:6px;
     margin-bottom:16px;
   }
   .tab-btn{
     flex:1;
-    padding:10px 14px;
+    min-width:88px;
+    padding:10px 10px;
     background:var(--panel-2);
     border:1px solid var(--border);
     color:var(--text-dim);
     font-family:inherit;
-    font-size:0.95em;
-    letter-spacing:0.5px;
+    font-size:0.88em;
+    letter-spacing:0.3px;
     text-transform:uppercase;
     cursor:pointer;
     border-radius:var(--radius);
     transition:all .15s ease;
+    position:relative;
+    white-space:nowrap;
   }
+  .tab-btn .tab-icon{margin-right:5px; font-size:1.05em;}
   .tab-btn:hover{color:var(--text); border-color:var(--gold);}
   .tab-btn.active{
     color:var(--gold-bright);
@@ -150,14 +155,38 @@
     background:linear-gradient(180deg,#1a1710,#12151d);
     box-shadow:inset 0 0 14px rgba(201,162,39,0.08);
   }
+  .tab-badge{
+    display:inline-block;
+    min-width:16px;
+    padding:0 4px;
+    margin-left:5px;
+    border-radius:8px;
+    background:var(--danger);
+    color:#fff;
+    font-size:0.68em;
+    font-family:'Courier New',monospace;
+    line-height:16px;
+    text-align:center;
+    vertical-align:middle;
+  }
 
   .panel{
-    background:linear-gradient(180deg,#141821,#0f121a);
+    background:
+      radial-gradient(circle 2.5px at 9px 9px, #6b5a30 55%, transparent 58%),
+      radial-gradient(circle 2.5px at calc(100% - 9px) 9px, #6b5a30 55%, transparent 58%),
+      radial-gradient(circle 2.5px at 9px calc(100% - 9px), #6b5a30 55%, transparent 58%),
+      radial-gradient(circle 2.5px at calc(100% - 9px) calc(100% - 9px), #6b5a30 55%, transparent 58%),
+      linear-gradient(180deg,#141821,#0f121a);
     border:1px solid var(--border);
     border-radius:var(--radius);
-    padding:16px;
+    padding:18px 16px;
     margin-bottom:16px;
     position:relative;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.05),
+      inset 0 -1px 0 rgba(0,0,0,0.45),
+      inset 1px 0 0 rgba(255,255,255,0.02),
+      inset -1px 0 0 rgba(0,0,0,0.3);
   }
   .panel-title{
     font-size:0.78em;
@@ -233,10 +262,22 @@
   .event-card{
     border:1px solid var(--border);
     border-radius:var(--radius);
-    margin-bottom:10px;
-    overflow:hidden;
+    margin-bottom:14px;
+    overflow:visible;
     background:var(--panel-2);
+    position:relative;
   }
+  .event-card::after{
+    content:"✦ ⚔ ✦";
+    display:block;
+    text-align:center;
+    color:var(--border-lit);
+    opacity:0.35;
+    font-size:0.6em;
+    letter-spacing:6px;
+    margin:6px 0 -10px;
+  }
+  .event-card:last-child::after{ display:none; }
   .event-head{
     display:flex; align-items:center; gap:12px;
     padding:12px 14px;
@@ -304,15 +345,23 @@
 
   .event-badge{
     font-family:'Courier New',monospace;
-    font-size:0.7em;
-    letter-spacing:0.5px;
+    font-size:0.62em;
+    font-weight:bold;
+    letter-spacing:0.3px;
     text-transform:uppercase;
-    padding:2px 8px;
-    border-radius:10px;
+    width:46px; height:46px;
+    border-radius:50%;
     flex:0 0 auto;
+    display:flex; align-items:center; justify-content:center;
+    text-align:center;
+    line-height:1.1;
+    transform:rotate(-8deg);
+    border-width:2px;
+    border-style:solid;
+    box-shadow:0 2px 4px rgba(0,0,0,0.5), inset 0 0 6px rgba(0,0,0,0.3);
   }
-  .event-badge.vitoria{color:var(--victory-bright); border:1px solid var(--victory); background:rgba(62,201,114,0.08);}
-  .event-badge.derrota{color:var(--danger-bright); border:1px solid var(--danger); background:rgba(181,68,46,0.08);}
+  .event-badge.vitoria{color:var(--victory-bright); border-color:var(--victory); background:radial-gradient(circle, rgba(62,201,114,0.22), rgba(62,201,114,0.06));}
+  .event-badge.derrota{color:var(--danger-bright); border-color:var(--danger); background:radial-gradient(circle, rgba(181,68,46,0.22), rgba(181,68,46,0.06));}
   .result-section{
     margin-bottom:12px;
     padding-bottom:12px;
@@ -371,15 +420,32 @@
   }
   .draw-name.spinning{color:var(--text-dim); font-weight:normal;}
   .draw-winners-list{display:flex; flex-direction:column; gap:6px;}
-  .draw-winner-item{
-    font-size:1.15em; font-weight:bold; color:var(--arcane);
-    display:flex; align-items:center; justify-content:center; gap:8px;
+  @keyframes prize-pulse{
+    0%,100%{ text-shadow:0 0 6px rgba(232,196,90,0.5), 0 0 2px rgba(232,196,90,0.6); }
+    50%{ text-shadow:0 0 16px rgba(232,196,90,0.95), 0 0 6px rgba(255,255,255,0.5); }
   }
+  @keyframes sparkle-twinkle{
+    0%,100%{ opacity:0.2; transform:scale(0.7); }
+    50%{ opacity:1; transform:scale(1.15); }
+  }
+  .draw-winner-item{
+    font-size:1.15em; font-weight:bold; color:var(--gold-bright);
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    flex-wrap:wrap;
+    animation:prize-pulse 2.2s ease-in-out infinite;
+    padding:4px 0;
+  }
+  .draw-winner-item .sparkle{
+    color:var(--gold-bright);
+    animation:sparkle-twinkle 1.6s ease-in-out infinite;
+    display:inline-block;
+  }
+  .draw-winner-item .sparkle.s2{ animation-delay:0.5s; }
   .draw-winner-item .rune-icon{
     width:12px;height:12px;
     clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
-    background:var(--arcane);
-    box-shadow:0 0 8px var(--arcane);
+    background:var(--gold-bright);
+    box-shadow:0 0 10px var(--gold-bright);
     flex:0 0 auto;
   }
   textarea{
@@ -451,7 +517,7 @@
     width:28px; flex:0 0 auto; text-align:center;
   }
   .ranking-name{flex:0 0 auto; width:140px; font-size:0.88em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
-  .ranking-bar-wrap{flex:1; height:8px; background:var(--panel); border-radius:4px; overflow:hidden; border:1px solid var(--border);}
+  .ranking-bar-wrap{flex:1; height:9px; background:var(--panel); border-radius:4px; overflow:hidden; border:1px solid var(--border); box-shadow:inset 0 1px 2px rgba(0,0,0,0.6), inset 0 -1px 0 rgba(255,255,255,0.04);}
   .ranking-bar-fill{height:100%; background:linear-gradient(90deg, var(--arcane-dim), var(--arcane)); border-radius:4px;}
   .ranking-row.zero .ranking-bar-fill{background:var(--danger);}
   .ranking-row.zero .ranking-count{color:var(--danger-bright);}
@@ -496,6 +562,64 @@
     color:var(--gold-bright);
   }
   .hist-prize-date{font-family:'Courier New',monospace; font-size:0.85em; color:var(--text-dim); flex:0 0 auto;}
+  .hist-prize-item{flex-wrap:wrap;}
+  .pay-toggle{
+    display:inline-flex; align-items:center; gap:4px;
+    padding:2px 9px;
+    border-radius:10px;
+    font-size:0.72em;
+    font-family:'Courier New',monospace;
+    cursor:pointer;
+    border:1px solid var(--border);
+    flex:0 0 auto;
+    transition:all .12s ease;
+  }
+  .pay-toggle:hover{filter:brightness(1.15);}
+  .pay-toggle.paid{color:var(--victory-bright); border-color:var(--victory); background:rgba(62,201,114,0.1);}
+  .pay-toggle.pending{
+    color:var(--danger-bright); border-color:var(--danger); background:rgba(181,68,46,0.08);
+    clip-path:polygon(12px 0%, 100% 0%, 100% 100%, 12px 100%, 0% 50%);
+    padding-left:17px;
+    position:relative;
+  }
+  .pay-toggle.pending::before{
+    content:'';
+    position:absolute;
+    left:6px; top:50%;
+    width:3px; height:3px;
+    border-radius:50%;
+    background:var(--danger-bright);
+    transform:translateY(-50%);
+    box-shadow:0 0 3px var(--danger-bright);
+  }
+  .draw-history-pair{
+    display:flex; justify-content:space-between; align-items:center; gap:8px;
+    padding:4px 0;
+    font-size:0.9em;
+  }
+  .pending-pay-row{
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+    padding:9px 10px;
+    background:var(--panel-2);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    margin-bottom:6px;
+  }
+  .pending-pay-info{font-size:0.85em;}
+  .pending-pay-meta{font-size:0.72em; color:var(--text-dim); font-family:'Courier New',monospace; margin-top:2px;}
+  .onboard-steps{display:flex; flex-direction:column; gap:12px;}
+  .onboard-step{display:flex; gap:10px; align-items:flex-start;}
+  .onboard-num{
+    flex:0 0 auto;
+    width:24px; height:24px;
+    border-radius:50%;
+    border:1px solid var(--gold);
+    color:var(--gold-bright);
+    display:flex; align-items:center; justify-content:center;
+    font-size:0.8em; font-weight:bold;
+    font-family:'Courier New',monospace;
+  }
+  .onboard-btn{flex:none !important; min-width:0 !important; text-transform:none !important; letter-spacing:0 !important;}
   .footer-tagline{
     text-align:center;
     margin-top:22px;
@@ -533,7 +657,8 @@
 
 <script>
 (function(){
-  var API_URL = '/api/state';
+  var DATA_KEY = 'mu-guild-registry-v1';
+  var STORAGE_SHARED = false; // dados pessoais deste dispositivo/conta
   var state = null; // {guildName, members:[{id,name}], events:[{id,name,type,date,attendees:[memberId]}]}
   var openEventId = null;
   var activeTab = 'eventos';
@@ -541,33 +666,48 @@
   var drawing = false;
   var drawIntervalId = null;
   var openHistoricoEventId = null;
-  var lastSavedAt = null;
-  var syncing = false;
 
   var EVENT_TYPES = [
-    'Maya','Hell Mine - 13:00','Hell Mine - 19:00',
-    'Phoenix - 07:30','Phoenix - 19:30',
-    'Death Beam - 06:30','Death Beam - 18:30',
-    'Medusa - 10:30','Medusa - 22:30',
-    'Kundum - 11:00','Kundum - 23:00',
-    'Selupan - 13:00','Selupan - 23:59',
+    'Maya - VIP','Maya - Principal',
+    'Death Beam - VIP - 05:30','Death Beam - VIP - 17:30',
+    'Death Beam - Principal - 06:30','Death Beam - Principal - 18:30',
+    'Hell Mine - VIP - 06:00','Hell Mine - VIP - 18:00',
+    'Hell Mine - Principal - 13:00','Hell Mine - Principal - 19:00',
+    'Phoenix - VIP - 06:35','Phoenix - VIP - 18:35',
+    'Phoenix - Principal - 07:30','Phoenix - Principal - 19:30',
+    'Medusa - VIP - 09:30','Medusa - VIP - 21:30',
+    'Medusa - Principal - 10:30','Medusa - Principal - 22:30',
+    'Kundum - VIP - 10:00','Kundum - VIP - 22:00',
+    'Kundum - Principal - 11:00','Kundum - Principal - 23:00',
+    'Selupan - Principal - 12:00','Selupan - Principal - 23:59',
     'Outro'
   ];
 
   var EVENT_INFO = {
-    'Death Beam - 06:30': {local:'Tarkan', reward:'Pena e Crest', icon:'🪶'},
-    'Death Beam - 18:30': {local:'Tarkan', reward:'Pena e Crest', icon:'🪶'},
-    'Phoenix - 07:30': {local:'Icarus', reward:'Pena e Crest', icon:'🪶'},
-    'Phoenix - 19:30': {local:'Icarus', reward:'Pena e Crest', icon:'🪶'},
-    'Hell Mine - 13:00': {local:'Aida 2', reward:'Joias', icon:'💎'},
-    'Hell Mine - 19:00': {local:'Aida 2', reward:'Joias', icon:'💎'},
-    'Kundum - 11:00': {local:'Kalima', reward:'Joias', icon:'💎'},
-    'Kundum - 23:00': {local:'Kalima', reward:'Joias', icon:'💎'},
-    'Medusa - 10:30': {local:'Calmness', reward:'Rings e Pendants', icon:'💍'},
-    'Medusa - 22:30': {local:'Calmness', reward:'Rings e Pendants', icon:'💍'},
-    'Selupan - 13:00': {local:'Raklion', reward:'Talismã Keep', icon:'🔮'},
-    'Selupan - 23:59': {local:'Raklion', reward:'Talismã Keep', icon:'🔮'},
-    'Maya': {local:'Kanturu 3', reward:'Joias', icon:'💎'}
+    'Death Beam - VIP - 05:30': {local:'Tarkan', reward:'Pena e Crest', icon:'🪶'},
+    'Death Beam - VIP - 17:30': {local:'Tarkan', reward:'Pena e Crest', icon:'🪶'},
+    'Death Beam - Principal - 06:30': {local:'Tarkan', reward:'Pena e Crest', icon:'🪶'},
+    'Death Beam - Principal - 18:30': {local:'Tarkan', reward:'Pena e Crest', icon:'🪶'},
+    'Phoenix - VIP - 06:35': {local:'Icarus', reward:'Pena e Crest', icon:'🪶'},
+    'Phoenix - VIP - 18:35': {local:'Icarus', reward:'Pena e Crest', icon:'🪶'},
+    'Phoenix - Principal - 07:30': {local:'Icarus', reward:'Pena e Crest', icon:'🪶'},
+    'Phoenix - Principal - 19:30': {local:'Icarus', reward:'Pena e Crest', icon:'🪶'},
+    'Hell Mine - VIP - 06:00': {local:'Aida 2', reward:'Joias', icon:'💎'},
+    'Hell Mine - VIP - 18:00': {local:'Aida 2', reward:'Joias', icon:'💎'},
+    'Hell Mine - Principal - 13:00': {local:'Aida 2', reward:'Joias', icon:'💎'},
+    'Hell Mine - Principal - 19:00': {local:'Aida 2', reward:'Joias', icon:'💎'},
+    'Kundum - VIP - 10:00': {local:'Kalima', reward:'Joias', icon:'💎'},
+    'Kundum - VIP - 22:00': {local:'Kalima', reward:'Joias', icon:'💎'},
+    'Kundum - Principal - 11:00': {local:'Kalima', reward:'Joias', icon:'💎'},
+    'Kundum - Principal - 23:00': {local:'Kalima', reward:'Joias', icon:'💎'},
+    'Medusa - VIP - 09:30': {local:'Calmness', reward:'Rings e Pendants', icon:'💍'},
+    'Medusa - VIP - 21:30': {local:'Calmness', reward:'Rings e Pendants', icon:'💍'},
+    'Medusa - Principal - 10:30': {local:'Calmness', reward:'Rings e Pendants', icon:'💍'},
+    'Medusa - Principal - 22:30': {local:'Calmness', reward:'Rings e Pendants', icon:'💍'},
+    'Selupan - Principal - 12:00': {local:'Raklion', reward:'Talismã Keep', icon:'🔮'},
+    'Selupan - Principal - 23:59': {local:'Raklion', reward:'Talismã Keep', icon:'🔮'},
+    'Maya - VIP': {local:'Kanturu 3', reward:'Joias', icon:'💎'},
+    'Maya - Principal': {local:'Kanturu 3', reward:'Joias', icon:'💎'}
   };
 
   function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
@@ -584,8 +724,9 @@
   };
 
   function getWeekRange(dateStr){
+    // Semana de segunda a domingo, baseada na data informada
     var d = new Date(dateStr + 'T00:00:00');
-    var day = d.getDay();
+    var day = d.getDay(); // 0=Dom .. 6=Sáb
     var diffToMonday = (day === 0 ? -6 : 1 - day);
     var monday = new Date(d);
     monday.setDate(d.getDate() + diffToMonday);
@@ -636,6 +777,7 @@
   }
 
   function weightedDrawWithoutReplacement(entries, count){
+    // entries: [{name, weight}]
     var pool = entries.slice();
     var winners = [];
     for(var i=0;i<count && pool.length>0;i++){
@@ -650,42 +792,37 @@
     return { guildName: 'WAKANDA', members: [], events: [], draws: [], eventWeights: Object.assign({}, DEFAULT_EVENT_WEIGHTS) };
   }
 
-  function normalizeState(){
-    if(!state.members) state.members = [];
-    if(!state.events) state.events = [];
-    if(!state.draws) state.draws = [];
-    state.draws.forEach(function(d){
-      if(!d.pairs && d.winners){
-        d.pairs = d.winners.map(function(w){ return {winner:w, prize:''}; });
-        delete d.winners;
-      }
-      if(!d.pairs) d.pairs = [];
-      if(!d.participants) d.participants = [];
-      if(typeof d.eventId === 'undefined') d.eventId = null;
-    });
-    state.events.forEach(function(ev){
-      if(typeof ev.result === 'undefined') ev.result = null;
-      if(typeof ev.enemyGuild === 'undefined') ev.enemyGuild = '';
-    });
-    if(!state.eventWeights) state.eventWeights = {};
-    Object.keys(DEFAULT_EVENT_WEIGHTS).forEach(function(fam){
-      if(typeof state.eventWeights[fam] === 'undefined') state.eventWeights[fam] = DEFAULT_EVENT_WEIGHTS[fam];
-    });
-  }
-
-  async function loadData(silent){
+  async function loadData(){
     try{
-      var res = await fetch(API_URL, { cache: 'no-store' });
-      var json = await res.json();
-      if(json){
-        state = json;
-        normalizeState();
+      var res = await window.storage.get(DATA_KEY, STORAGE_SHARED);
+      if(res && res.value){
+        state = JSON.parse(res.value);
+        if(!state.members) state.members = [];
+        if(!state.events) state.events = [];
+      if(!state.draws) state.draws = [];
+      state.draws.forEach(function(d){
+        if(!d.pairs && d.winners){
+          d.pairs = d.winners.map(function(w){ return {winner:w, prize:''}; });
+          delete d.winners;
+        }
+        if(!d.pairs) d.pairs = [];
+        d.pairs.forEach(function(p){ if(typeof p.paid === 'undefined') p.paid = false; });
+        if(!d.participants) d.participants = [];
+        if(typeof d.eventId === 'undefined') d.eventId = null;
+      });
+      state.events.forEach(function(ev){
+        if(typeof ev.result === 'undefined') ev.result = null;
+        if(typeof ev.enemyGuild === 'undefined') ev.enemyGuild = '';
+      });
+      if(!state.eventWeights) state.eventWeights = {};
+      Object.keys(DEFAULT_EVENT_WEIGHTS).forEach(function(fam){
+        if(typeof state.eventWeights[fam] === 'undefined') state.eventWeights[fam] = DEFAULT_EVENT_WEIGHTS[fam];
+      });
       } else {
         state = defaultState();
       }
     }catch(e){
-      if(!state) state = defaultState();
-      if(!silent) setStatus('Não foi possível conectar ao servidor — mostrando dados locais.');
+      state = defaultState();
     }
     render();
   }
@@ -695,43 +832,13 @@
     clearTimeout(saveTimeout);
     saveTimeout = setTimeout(async function(){
       try{
-        var res = await fetch(API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(state)
-        });
-        var result = await res.json();
-        lastSavedAt = result && result.updated_at;
-        if(showStatus) setStatus(result && result.ok ? 'Salvo.' : 'Falha ao salvar. Tente novamente.');
+        var result = await window.storage.set(DATA_KEY, JSON.stringify(state), STORAGE_SHARED);
+        if(showStatus) setStatus(result ? 'Salvo.' : 'Falha ao salvar. Tente novamente.');
       }catch(e){
-        setStatus('Erro ao salvar: sem conexão com o servidor.');
+        setStatus('Erro ao salvar: ' + (e && e.message ? e.message : 'desconhecido'));
       }
     }, 250);
   }
-
-  // Sincroniza com o que outras pessoas da guild salvaram, sem atrapalhar quem está digitando
-  function isUserTyping(){
-    var el = document.activeElement;
-    if(!el) return false;
-    var tag = el.tagName;
-    return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
-  }
-
-  async function pollForUpdates(){
-    if(syncing || drawing || isUserTyping() || pendingDelete) return;
-    syncing = true;
-    try{
-      var res = await fetch(API_URL, { cache: 'no-store' });
-      var json = await res.json();
-      if(json && JSON.stringify(json) !== JSON.stringify(state)){
-        state = json;
-        normalizeState();
-        render();
-      }
-    }catch(e){ /* silencioso — mantém os dados atuais na tela */ }
-    syncing = false;
-  }
-  setInterval(pollForUpdates, 12000);
 
   function setStatus(msg){
     var el = document.getElementById('status-msg');
@@ -758,9 +865,9 @@
     var name = getMemberName(memberId);
     var prizes = [];
     state.draws.forEach(function(d){
-      d.pairs.forEach(function(p){
+      d.pairs.forEach(function(p, idx){
         if(p.winner === name){
-          prizes.push({ date: d.date, prize: p.prize, source: d.source });
+          prizes.push({ date: d.date, prize: p.prize, source: d.source, drawId: d.id, idx: idx, paid: !!p.paid });
         }
       });
     });
@@ -832,9 +939,42 @@
     return String(s||'').replace(/[\/\\:*?"<>|]+/g,'-').replace(/\s+/g,' ').trim();
   }
 
+  var DRIVE_FOLDER_ID = '1Dq0GwzC6yihyj1d-1JgxyZ9jLZ7w1RBS';
   var DRIVE_FOLDER_URL = 'https://drive.google.com/drive/folders/1Dq0GwzC6yihyj1d-1JgxyZ9jLZ7w1RBS?usp=sharing';
 
-  function autoExportDraw(d){
+  async function uploadFileToDrive(base64Data, fileName){
+    try{
+      var response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1000,
+          messages: [{
+            role: 'user',
+            content: 'Use the connected Google Drive tool to create a new binary .xlsx file inside the Drive folder with ID "'+DRIVE_FOLDER_ID+'". File name: "'+fileName+'". The file content is the following base64-encoded XLSX data — decode it and upload it as-is (do not treat it as text). Reply only confirming success or describing the error.\n\nBASE64_XLSX:\n'+base64Data
+          }],
+          mcp_servers: [{ type: 'url', url: 'https://drivemcp.googleapis.com/mcp/v1', name: 'google-drive' }]
+        })
+      });
+      if(!response.ok){
+        return { ok:false, message: 'Download local concluído, mas o envio ao Drive falhou (HTTP '+response.status+'). Envie manualmente pela pasta.' };
+      }
+      var data = await response.json();
+      var content = data.content || [];
+      var toolResults = content.filter(function(b){ return b.type === 'mcp_tool_result'; });
+      var toolErrors = toolResults.filter(function(b){ return b.is_error; });
+      var textBlocks = content.filter(function(b){ return b.type==='text'; }).map(function(b){ return b.text; }).join(' ');
+      if(toolResults.length > 0 && toolErrors.length === 0){
+        return { ok:true, message: 'Planilha baixada e enviada para a pasta do Google Drive.' };
+      }
+      return { ok:false, message: 'Download local concluído. Envio automático ao Drive não confirmado — envie manualmente pela pasta.' };
+    }catch(e){
+      return { ok:false, message: 'Download local concluído, mas não consegui conectar ao Google Drive agora. Envie manualmente pela pasta.' };
+    }
+  }
+
+  async function autoExportDraw(d){
     if(typeof XLSX === 'undefined'){
       setStatus('Sorteio salvo, mas a biblioteca de planilha não carregou — exporte manualmente depois.');
       return;
@@ -842,7 +982,8 @@
     var wb = XLSX.utils.book_new();
 
     var winnerNames = {};
-    d.pairs.forEach(function(p){ winnerNames[p.winner] = p.prize; });
+    var winnerPaid = {};
+    d.pairs.forEach(function(p){ winnerNames[p.winner] = p.prize; winnerPaid[p.winner] = !!p.paid; });
 
     var chanceByName = {};
     if(d.chances){
@@ -853,7 +994,8 @@
       var row = {
         'Nome': name,
         'Vencedor': winnerNames.hasOwnProperty(name) ? 'Sim' : 'Não',
-        'Prêmio': winnerNames.hasOwnProperty(name) ? winnerNames[name] : ''
+        'Prêmio': winnerNames.hasOwnProperty(name) ? winnerNames[name] : '',
+        'Pago': winnerNames.hasOwnProperty(name) ? (winnerPaid[name] ? 'Sim' : 'Não') : ''
       };
       if(d.chances){
         row['Pontos de chance'] = chanceByName.hasOwnProperty(name) ? chanceByName[name].toFixed(2) : '';
@@ -862,7 +1004,7 @@
     });
     XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(presentesRows), 'Presentes');
 
-    var vitoriosoRows = d.pairs.map(function(p){ return { 'Vitorioso': p.winner, 'Prêmio': p.prize }; });
+    var vitoriosoRows = d.pairs.map(function(p){ return { 'Vitorioso': p.winner, 'Prêmio': p.prize, 'Pago': p.paid ? 'Sim' : 'Não' }; });
     XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(vitoriosoRows), 'Vitoriosos');
 
     var eventLabel = d.eventId ? (function(){
@@ -872,10 +1014,13 @@
 
     var fileName = sanitizeFileName(d.date + ', Sorteio - ' + eventLabel) + '.xlsx';
     XLSX.writeFile(wb, fileName);
-    setStatus('Resultado do sorteio salvo e planilha baixada.');
+    setStatus('Resultado do sorteio salvo. Enviando cópia para o Google Drive...');
+    var base64 = XLSX.write(wb, { bookType:'xlsx', type:'base64' });
+    var result = await uploadFileToDrive(base64, fileName);
+    setStatus(result.message);
   }
 
-  function exportToExcel(){
+  async function exportToExcel(){
     if(typeof XLSX === 'undefined'){
       setStatus('Biblioteca de exportação não carregou. Verifique sua conexão.');
       return;
@@ -923,7 +1068,7 @@
       var sorteiosRows = [];
       state.draws.forEach(function(d){
         d.pairs.forEach(function(p, idx){
-          sorteiosRows.push({ 'Data': d.date, 'Fonte': d.source, 'Ganhador': p.winner, 'Premio': p.prize, 'Posicao': idx+1 });
+          sorteiosRows.push({ 'Data': d.date, 'Fonte': d.source, 'Ganhador': p.winner, 'Premio': p.prize, 'Pago': p.paid ? 'Sim' : 'Não', 'Posicao': idx+1 });
         });
       });
       var wsSorteios = XLSX.utils.json_to_sheet(sorteiosRows);
@@ -933,10 +1078,13 @@
     var todayStr = new Date().toISOString().slice(0,10);
     var fileName = sanitizeFileName(todayStr + ', ' + (state.guildName || 'guild') + ' - presencas') + '.xlsx';
     XLSX.writeFile(wb, fileName);
-    setStatus('Planilha baixada.');
+    setStatus('Planilha baixada. Enviando cópia para o Google Drive...');
+    var base64 = XLSX.write(wb, { bookType:'xlsx', type:'base64' });
+    var result = await uploadFileToDrive(base64, fileName);
+    setStatus(result.message);
   }
 
-  function exportEventToExcel(eventId){
+  async function exportEventToExcel(eventId){
     if(typeof XLSX === 'undefined'){
       setStatus('Biblioteca de exportação não carregou. Verifique sua conexão.');
       return;
@@ -964,14 +1112,17 @@
     if(relatedDraws.length > 0){
       var sorteioRows = [];
       relatedDraws.forEach(function(d){
-        d.pairs.forEach(function(p){ sorteioRows.push({ 'Ganhador': p.winner, 'Premio': p.prize }); });
+        d.pairs.forEach(function(p){ sorteioRows.push({ 'Ganhador': p.winner, 'Premio': p.prize, 'Pago': p.paid ? 'Sim' : 'Não' }); });
       });
       XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sorteioRows), 'Sorteio');
     }
 
     var fileName = sanitizeFileName(ev.date + ', ' + ev.name) + '.xlsx';
     XLSX.writeFile(wb, fileName);
-    setStatus('Planilha do evento baixada.');
+    setStatus('Planilha do evento baixada. Enviando cópia para o Google Drive...');
+    var base64 = XLSX.write(wb, { bookType:'xlsx', type:'base64' });
+    var result = await uploadFileToDrive(base64, fileName);
+    setStatus(result.message);
   }
 
   function resetAll(){
@@ -1139,7 +1290,7 @@
 
   function finalizeDraw(pool, winners, prizes, sourceLabel, eventId, meta){
     drawing = false;
-    var pairs = winners.map(function(w, idx){ return { winner: w, prize: prizes[idx] || '' }; });
+    var pairs = winners.map(function(w, idx){ return { winner: w, prize: prizes[idx] || '', paid: false }; });
     var d = { id: uid(), date: new Date().toISOString().slice(0,10), source: sourceLabel, eventId: eventId || null, participants: pool.slice(), pairs: pairs };
     if(meta && meta.chances){
       d.chances = meta.chances.map(function(c){ return { name: c.name, weight: c.weight }; });
@@ -1172,8 +1323,10 @@
       html += renderSorteioTab();
     } else if(activeTab === 'ranking'){
       html += renderRankingTab();
-    } else {
+    } else if(activeTab === 'historico'){
       html += renderHistoricoTab();
+    } else {
+      html += renderPagamentosTab();
     }
     html += renderToolbar();
     html += renderFooter();
@@ -1206,13 +1359,15 @@
   }
 
   function renderTabs(){
+    var pendingCount = getAllPrizeEntries().filter(function(r){ return !r.paid; }).length;
     return '' +
     '<div class="tabs">' +
-      '<button class="tab-btn'+(activeTab==='eventos'?' active':'')+'" data-tab="eventos">Eventos</button>' +
-      '<button class="tab-btn'+(activeTab==='membros'?' active':'')+'" data-tab="membros">Membros ('+state.members.length+')</button>' +
-      '<button class="tab-btn'+(activeTab==='sorteio'?' active':'')+'" data-tab="sorteio">Sorteio</button>' +
-      '<button class="tab-btn'+(activeTab==='ranking'?' active':'')+'" data-tab="ranking">Ranking</button>' +
-      '<button class="tab-btn'+(activeTab==='historico'?' active':'')+'" data-tab="historico">Histórico</button>' +
+      '<button class="tab-btn'+(activeTab==='eventos'?' active':'')+'" data-tab="eventos"><span class="tab-icon">⚔️</span>Eventos</button>' +
+      '<button class="tab-btn'+(activeTab==='membros'?' active':'')+'" data-tab="membros"><span class="tab-icon">📜</span>Membros ('+state.members.length+')</button>' +
+      '<button class="tab-btn'+(activeTab==='sorteio'?' active':'')+'" data-tab="sorteio"><span class="tab-icon">🎲</span>Sorteio</button>' +
+      '<button class="tab-btn'+(activeTab==='ranking'?' active':'')+'" data-tab="ranking"><span class="tab-icon">🏆</span>Ranking</button>' +
+      '<button class="tab-btn'+(activeTab==='historico'?' active':'')+'" data-tab="historico"><span class="tab-icon">📖</span>Histórico</button>' +
+      '<button class="tab-btn'+(activeTab==='pagamentos'?' active':'')+'" data-tab="pagamentos"><span class="tab-icon">💰</span>Pagamentos'+(pendingCount>0?'<span class="tab-badge">'+pendingCount+'</span>':'')+'</button>' +
     '</div>';
   }
 
@@ -1247,8 +1402,23 @@
     return html;
   }
 
+  function renderOnboardingBanner(){
+    if(state.members.length > 0 || state.events.length > 0) return '';
+    var html = '<div class="panel" style="border-color:var(--gold);">';
+    html += '<div class="panel-title">Primeiros passos</div>';
+    html += '<div class="onboard-steps">';
+    html += '<div class="onboard-step"><span class="onboard-num">1</span><div><strong>Cadastre os membros</strong><div class="result-label" style="margin:2px 0 6px;">Adicione o roster da guild na aba Membros.</div><button class="btn btn-sm btn-arcane tab-btn onboard-btn" data-tab="membros">Ir para Membros</button></div></div>';
+    html += '<div class="onboard-step"><span class="onboard-num">2</span><div><strong>Registre um evento</strong><div class="result-label" style="margin:2px 0 6px;">Crie o boss/evento do dia aqui em Eventos.</div><button class="btn btn-sm btn-ghost" disabled>Você já está aqui</button></div></div>';
+    html += '<div class="onboard-step"><span class="onboard-num">3</span><div><strong>Marque presença</strong><div class="result-label" style="margin:2px 0 6px;">Abra o evento criado e marque quem participou.</div></div></div>';
+    html += '<div class="onboard-step"><span class="onboard-num">4</span><div><strong>Sorteie prêmios</strong><div class="result-label" style="margin:2px 0 6px;">Use a aba Sorteio para distribuir prêmios entre os presentes.</div><button class="btn btn-sm btn-arcane tab-btn onboard-btn" data-tab="sorteio">Ir para Sorteio</button></div></div>';
+    html += '</div>';
+    html += '</div>';
+    return html;
+  }
+
   function renderEventosTab(){
-    var html = '<div class="panel">';
+    var html = renderOnboardingBanner();
+    html += '<div class="panel">';
     html += '<div class="panel-title">Registrar novo evento</div>';
     html += '<div class="row" style="margin-bottom:8px;">';
     html += '<select id="new-event-type" style="flex:1;min-width:150px;">';
@@ -1275,15 +1445,15 @@
         html += '<span class="event-type-dot"></span>';
         html += '<div class="event-info">';
         html += '<div class="event-name">'+esc(ev.name)+'</div>';
-        html += '<div class="event-meta">'+esc(ev.date)+' · '+esc(ev.type)+'</div>';
+        html += '<div class="event-meta">'+esc(ev.date)+' · '+esc(ev.type)+(ev.result==='derrota'&&ev.enemyGuild?' · perdeu para '+esc(ev.enemyGuild):'')+'</div>';
         var info = EVENT_INFO[ev.type];
         if(info){
           html += '<div class="event-extra">📍 '+esc(info.local)+' &nbsp;·&nbsp; '+info.icon+' '+esc(info.reward)+'</div>';
         }
         html += '</div>';
         html += '<span class="event-count">'+ev.attendees.length+' presentes</span>';
-        if(ev.result === 'vitoria') html += '<span class="event-badge vitoria">Vitória</span>';
-        if(ev.result === 'derrota') html += '<span class="event-badge derrota">Derrota</span>';
+        if(ev.result === 'vitoria') html += '<span class="event-badge vitoria" title="Vitória">🏆<br>VIT</span>';
+        if(ev.result === 'derrota') html += '<span class="event-badge derrota" title="Derrota'+(ev.enemyGuild?' vs '+esc(ev.enemyGuild):'')+'">💀<br>DER</span>';
         html += '<span class="chevron'+(isOpen?' open':'')+'">&#9656;</span>';
         html += '</div>';
         html += '<div class="event-body'+(isOpen?' open':'')+'">';
@@ -1357,46 +1527,136 @@
 
     html += '<div class="panel">';
     html += '<div class="panel-title">Resultado</div>';
-    html += '<div class="draw-reveal">';
+    html += '<div id="draw-result-container">'+renderResultHTML()+'</div>';
+    html += '</div>';
+
+    html += '<div class="panel">';
+    html += '<div class="panel-title">Histórico de sorteios ('+state.draws.length+')</div>';
+    html += '<div id="draw-history-container">'+renderDrawHistoryHTML()+'</div>';
+    html += '</div>';
+
+    return html;
+  }
+
+  function renderPendingPaymentsHTML(){
+    var rows = [];
+    state.draws.forEach(function(d){
+      d.pairs.forEach(function(p, idx){
+        if(!p.paid){
+          rows.push({ drawId: d.id, idx: idx, date: d.date, source: d.source, winner: p.winner, prize: p.prize });
+        }
+      });
+    });
+    if(rows.length === 0) return '<div class="empty-msg">Nenhum prêmio pendente — tudo pago! 🎉</div>';
+    var html = '';
+    rows.forEach(function(r){
+      html += '<div class="pending-pay-row">';
+      html += '<div class="pending-pay-info"><strong>'+esc(r.winner)+'</strong> — '+esc(r.prize||'(sem nome)');
+      html += '<div class="pending-pay-meta">'+esc(r.date)+' · '+esc(r.source)+'</div></div>';
+      html += '<button class="btn btn-sm btn-arcane" data-toggle-paid="'+r.drawId+'|'+r.idx+'">Marcar como pago</button>';
+      html += '</div>';
+    });
+    return html;
+  }
+
+  function renderResultHTML(){
+    var html = '<div class="draw-reveal">';
     if(drawing){
       html += '<div class="draw-name spinning" id="draw-reveal-name">...</div>';
     } else if(state.draws.length > 0){
       var last = state.draws[0];
       html += '<div class="draw-winners-list">';
-      last.pairs.forEach(function(p){
-        html += '<div class="draw-winner-item"><span class="rune-icon"></span>'+esc(p.winner)+(p.prize?' — '+esc(p.prize):'')+'</div>';
+      last.pairs.forEach(function(p, idx){
+        html += '<div class="draw-winner-item"><span class="sparkle">✦</span><span class="rune-icon"></span>'+esc(p.winner)+(p.prize?' — '+esc(p.prize):'')+'<span class="sparkle s2">✦</span>'+
+          ' <span class="pay-toggle '+(p.paid?'paid':'pending')+'" data-toggle-paid="'+last.id+'|'+idx+'">'+(p.paid?'✓ Pago':'Pendente')+'</span></div>';
       });
       html += '</div>';
     } else {
       html += '<div class="placeholder">Nenhum sorteio realizado ainda.</div>';
     }
     html += '</div>';
-    html += '</div>';
-
-    html += '<div class="panel">';
-    html += '<div class="panel-title">Histórico de sorteios ('+state.draws.length+')</div>';
-    if(state.draws.length === 0){
-      html += '<div class="empty-msg">Os sorteios realizados aparecerão aqui.</div>';
-    } else {
-      state.draws.forEach(function(d){
-        var isPending = pendingDelete && pendingDelete.kind==='draw' && pendingDelete.id===d.id;
-        html += '<div class="draw-history-item">';
-        html += '<div class="draw-history-meta">'+esc(d.date)+' · '+esc(d.source)+'</div>';
-        html += '<div class="draw-history-winners">'+d.pairs.map(function(p){ return esc(p.winner)+(p.prize?' — '+esc(p.prize):''); }).join(' · ')+'</div>';
-        html += '<button class="btn btn-sm '+(isPending?'btn-danger':'btn-ghost')+'" style="margin-top:6px;" data-del-draw="'+d.id+'">'+(isPending?'Confirmar':'Remover')+'</button>';
-        html += '</div>';
-      });
-    }
-    html += '</div>';
-
     return html;
   }
+
+  function renderDrawHistoryHTML(){
+    if(state.draws.length === 0) return '<div class="empty-msg">Os sorteios realizados aparecerão aqui.</div>';
+    var html = '';
+    state.draws.forEach(function(d){
+      var isPending = pendingDelete && pendingDelete.kind==='draw' && pendingDelete.id===d.id;
+      html += '<div class="draw-history-item">';
+      html += '<div class="draw-history-meta">'+esc(d.date)+' · '+esc(d.source)+'</div>';
+      html += '<div class="draw-history-winners">';
+      d.pairs.forEach(function(p, idx){
+        html += '<div class="draw-history-pair"><span>'+esc(p.winner)+(p.prize?' — '+esc(p.prize):'')+'</span>'+
+          '<span class="pay-toggle '+(p.paid?'paid':'pending')+'" data-toggle-paid="'+d.id+'|'+idx+'">'+(p.paid?'✓ Pago':'Pendente')+'</span></div>';
+      });
+      html += '</div>';
+      html += '<button class="btn btn-sm '+(isPending?'btn-danger':'btn-ghost')+'" style="margin-top:6px;" data-del-draw="'+d.id+'">'+(isPending?'Confirmar':'Remover')+'</button>';
+      html += '</div>';
+    });
+    return html;
+  }
+
+  function toggleDrawPairPaid(drawId, idx){
+    var d = state.draws.find(function(x){ return x.id === drawId; });
+    if(!d || !d.pairs || !d.pairs[idx]) return;
+    d.pairs[idx].paid = !d.pairs[idx].paid;
+    saveData();
+    if(activeTab === 'historico'){
+      updateHistoricoList();
+    } else if(activeTab === 'pagamentos'){
+      updatePaymentsList();
+    } else {
+      updateSorteioPaymentViews();
+    }
+  }
+
+  function updateSorteioPaymentViews(){
+    var pend = document.getElementById('pending-payments-container');
+    if(pend) pend.innerHTML = renderPendingPaymentsHTML();
+    var res = document.getElementById('draw-result-container');
+    if(res) res.innerHTML = renderResultHTML();
+    var hist = document.getElementById('draw-history-container');
+    if(hist) hist.innerHTML = renderDrawHistoryHTML();
+    attachPayToggleListeners(document);
+    // Re-conecta o botão de excluir sorteio, já que o histórico foi reescrito
+    document.querySelectorAll('[data-del-draw]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var id = this.getAttribute('data-del-draw');
+        if(pendingDelete && pendingDelete.kind==='draw' && pendingDelete.id===id){
+          removeDraw(id);
+          pendingDelete = null;
+        } else {
+          pendingDelete = {kind:'draw', id:id};
+          render();
+          clearPendingSoon();
+        }
+      });
+    });
+  }
+
+  function attachPayToggleListeners(scopeEl){
+    (scopeEl || document).querySelectorAll('[data-toggle-paid]').forEach(function(el){
+      el.addEventListener('click', function(e){
+        e.stopPropagation();
+        var parts = this.getAttribute('data-toggle-paid').split('|');
+        toggleDrawPairPaid(parts[0], parseInt(parts[1],10));
+      });
+    });
+  }
+
+  var DRAW_SOURCE_HINTS = {
+    'pontuacao': 'Sorteia entre todo o roster, dando mais chance pra quem participou de mais eventos hoje.',
+    'roster': 'Sorteia entre todo o roster, com chance igual pra todo mundo, sem considerar presença.',
+    'evento': 'Sorteia só entre quem marcou presença num evento específico.',
+    'lista': 'Sorteia entre uma lista de nomes que você digitar na hora, fora do roster salvo.'
+  };
 
   function renderDrawSourceFields(){
     var container = document.getElementById('draw-source-fields');
     if(!container) return;
     var source = document.getElementById('draw-source').value;
-    var html = '';
+    var html = '<div class="result-label" style="margin-bottom:8px;">'+(DRAW_SOURCE_HINTS[source]||'')+'</div>';
     if(source === 'evento'){
       html += '<div class="row" style="margin-bottom:8px;">';
       html += '<select id="draw-event-select" style="flex:1;min-width:180px;">';
@@ -1538,11 +1798,15 @@
     } else {
       rows.forEach(function(r, idx){
         var pct = maxCount > 0 ? (r.count / maxCount) * 100 : 0;
+        var absPct = totalEvents > 0 ? (r.count / totalEvents) : 0;
         var isZero = r.count === 0;
+        var barColor = absPct >= 0.66 ? 'linear-gradient(90deg, var(--arcane-dim), var(--victory))' :
+                       absPct >= 0.34 ? 'linear-gradient(90deg, #7a3a1e, var(--gold))' :
+                       'linear-gradient(90deg, #5c1810, var(--danger))';
         html += '<div class="ranking-row'+(isZero?' zero':'')+'">';
         html += '<span class="ranking-pos">#'+(idx+1)+'</span>';
-        html += '<span class="ranking-name">'+esc(r.name)+'</span>';
-        html += '<div class="ranking-bar-wrap"><div class="ranking-bar-fill" style="width:'+pct+'%"></div></div>';
+        html += '<span class="ranking-name">'+(isZero?'💀 ':'')+esc(r.name)+'</span>';
+        html += '<div class="ranking-bar-wrap"><div class="ranking-bar-fill" style="width:'+pct+'%; background:'+barColor+';"></div></div>';
         html += '<span class="ranking-count">'+r.count+'/'+totalEvents+'</span>';
         html += '</div>';
       });
@@ -1625,7 +1889,8 @@
           html += '<div class="empty-msg" style="padding:4px 0;">Nenhum prêmio ganho ainda.</div>';
         } else {
           prizes.forEach(function(p){
-            html += '<div class="hist-prize-item"><span>🏆 '+esc(p.prize||'(sem nome)')+'</span><span class="hist-prize-date">'+esc(p.date)+'</span></div>';
+            html += '<div class="hist-prize-item"><span>🏆 '+esc(p.prize||'(sem nome)')+'</span><span class="hist-prize-date">'+esc(p.date)+'</span>'+
+              '<span class="pay-toggle '+(p.paid?'paid':'pending')+'" data-toggle-paid="'+p.drawId+'|'+p.idx+'">'+(p.paid?'✓ Pago':'Pendente')+'</span></div>';
           });
         }
         html += '</div>';
@@ -1642,10 +1907,10 @@
       html += '<span class="event-type-dot"></span>';
       html += '<div class="event-info">';
       html += '<div class="event-name">'+esc(ev.name)+'</div>';
-      html += '<div class="event-meta">'+esc(ev.date)+' · '+esc(ev.type)+'</div>';
+      html += '<div class="event-meta">'+esc(ev.date)+' · '+esc(ev.type)+(ev.result==='derrota'&&ev.enemyGuild?' · perdeu para '+esc(ev.enemyGuild):'')+'</div>';
       html += '</div>';
-      if(ev.result === 'vitoria') html += '<span class="event-badge vitoria">Vitória</span>';
-      if(ev.result === 'derrota') html += '<span class="event-badge derrota">Derrota'+(ev.enemyGuild?' vs '+esc(ev.enemyGuild):'')+'</span>';
+      if(ev.result === 'vitoria') html += '<span class="event-badge vitoria" title="Vitória">🏆<br>VIT</span>';
+      if(ev.result === 'derrota') html += '<span class="event-badge derrota" title="Derrota'+(ev.enemyGuild?' vs '+esc(ev.enemyGuild):'')+'">💀<br>DER</span>';
 
       if(filterId === 'todos'){
         html += '<span class="hist-counts">'+presentMembers.length+' presentes · '+absentMembers.length+' ausentes</span>';
@@ -1682,6 +1947,8 @@
         updateHistoricoList();
       });
     });
+
+    attachPayToggleListeners(container);
   }
 
   window.__muRerenderHistorico = function(){
@@ -1689,12 +1956,114 @@
     updateHistoricoList();
   };
 
+  function getAllPrizeEntries(){
+    var rows = [];
+    state.draws.forEach(function(d){
+      d.pairs.forEach(function(p, idx){
+        rows.push({ drawId: d.id, idx: idx, date: d.date, source: d.source, eventId: d.eventId || null, winner: p.winner, prize: p.prize, paid: !!p.paid });
+      });
+    });
+    return rows;
+  }
+
+  function renderPagamentosTab(){
+    var all = getAllPrizeEntries();
+    var pagos = all.filter(function(r){ return r.paid; }).length;
+    var pendentes = all.length - pagos;
+
+    var html = '';
+
+    html += '<div class="panel">';
+    html += '<div class="panel-title">Resumo</div>';
+    html += '<div class="hist-summary-row">';
+    html += '<div class="hist-summary-stat vitoria"><span class="num">'+pagos+'</span><span class="label">Pagos</span></div>';
+    html += '<div class="hist-summary-stat derrota"><span class="num">'+pendentes+'</span><span class="label">Pendentes</span></div>';
+    html += '<div class="hist-summary-stat"><span class="num">'+all.length+'</span><span class="label">Prêmios totais</span></div>';
+    html += '</div>';
+    html += '</div>';
+
+    html += '<div class="panel">';
+    html += '<div class="panel-title">Buscar</div>';
+    html += '<div class="row" style="margin-bottom:4px;">';
+    html += '<select id="payments-member-filter" style="flex:1;min-width:160px;" onchange="window.__muRerenderPayments()">';
+    html += '<option value="todos">Todos os membros</option>';
+    state.members.slice().sort(function(a,b){return a.name.localeCompare(b.name);}).forEach(function(m){
+      html += '<option value="'+m.id+'">'+esc(m.name)+'</option>';
+    });
+    html += '</select>';
+    html += '<select id="payments-event-filter" style="flex:1;min-width:160px;" onchange="window.__muRerenderPayments()">';
+    html += '<option value="todos">Todos os eventos</option>';
+    state.events.forEach(function(ev){
+      html += '<option value="'+ev.id+'">'+esc(ev.name)+' — '+esc(ev.date)+'</option>';
+    });
+    html += '</select>';
+    html += '<select id="payments-status-filter" style="flex:1;min-width:140px;" onchange="window.__muRerenderPayments()">';
+    html += '<option value="todos">Todos os status</option>';
+    html += '<option value="pendente">Pendentes</option>';
+    html += '<option value="pago">Pagos</option>';
+    html += '</select>';
+    html += '</div>';
+    html += '</div>';
+
+    html += '<div class="panel">';
+    html += '<div class="panel-title">Prêmios</div>';
+    html += '<div id="payments-list">'+renderPaymentsListHTML()+'</div>';
+    html += '</div>';
+
+    return html;
+  }
+
+  function renderPaymentsListHTML(){
+    var memberSel = document.getElementById('payments-member-filter');
+    var eventSel = document.getElementById('payments-event-filter');
+    var statusSel = document.getElementById('payments-status-filter');
+    var memberFilter = memberSel ? memberSel.value : 'todos';
+    var eventFilter = eventSel ? eventSel.value : 'todos';
+    var statusFilter = statusSel ? statusSel.value : 'todos';
+
+    var rows = getAllPrizeEntries();
+
+    if(memberFilter !== 'todos'){
+      var name = getMemberName(memberFilter);
+      rows = rows.filter(function(r){ return r.winner === name; });
+    }
+    if(eventFilter !== 'todos'){
+      rows = rows.filter(function(r){ return r.eventId === eventFilter; });
+    }
+    if(statusFilter === 'pendente') rows = rows.filter(function(r){ return !r.paid; });
+    if(statusFilter === 'pago') rows = rows.filter(function(r){ return r.paid; });
+
+    if(rows.length === 0){
+      return '<div class="empty-msg">Nenhum prêmio encontrado com esse filtro.</div>';
+    }
+
+    var html = '';
+    rows.forEach(function(r){
+      html += '<div class="pending-pay-row">';
+      html += '<div class="pending-pay-info"><strong>'+esc(r.winner)+'</strong> — '+esc(r.prize||'(sem nome)');
+      html += '<div class="pending-pay-meta">'+esc(r.date)+' · '+esc(r.source)+'</div></div>';
+      html += '<span class="pay-toggle '+(r.paid?'paid':'pending')+'" data-toggle-paid="'+r.drawId+'|'+r.idx+'">'+(r.paid?'✓ Pago':'Pendente')+'</span>';
+      html += '</div>';
+    });
+    return html;
+  }
+
+  function updatePaymentsList(){
+    var container = document.getElementById('payments-list');
+    if(!container) return;
+    container.innerHTML = renderPaymentsListHTML();
+    attachPayToggleListeners(container);
+  }
+
+  window.__muRerenderPayments = function(){
+    updatePaymentsList();
+  };
+
   function renderToolbar(){
     return '' +
     '<div class="toolbar">' +
       '<div class="row">' +
         '<button class="btn btn-arcane" id="export-btn">Exportar para Excel</button>' +
-        '<button class="btn btn-ghost" id="refresh-btn" title="Buscar atualizações de outros membros">Atualizar</button>' +
         '<a class="btn btn-ghost" href="'+DRIVE_FOLDER_URL+'" target="_blank" rel="noopener">Abrir pasta do Drive</a>' +
         '<button class="btn btn-ghost" id="reset-btn">'+(pendingDelete && pendingDelete.kind==='all' ? 'Confirmar reinício' : 'Reiniciar dados')+'</button>' +
       '</div>' +
@@ -1822,9 +2191,6 @@
     var exportBtn = document.getElementById('export-btn');
     if(exportBtn) exportBtn.addEventListener('click', exportToExcel);
 
-    var refreshBtn = document.getElementById('refresh-btn');
-    if(refreshBtn) refreshBtn.addEventListener('click', function(){ loadData(false); setStatus('Dados atualizados.'); });
-
     var resetBtn = document.getElementById('reset-btn');
     if(resetBtn){
       resetBtn.addEventListener('click', function(){
@@ -1869,6 +2235,8 @@
           }
         });
       });
+
+      attachPayToggleListeners(document);
     }
 
     if(activeTab === 'ranking'){
@@ -1878,6 +2246,10 @@
 
     if(activeTab === 'historico'){
       updateHistoricoList();
+    }
+
+    if(activeTab === 'pagamentos'){
+      attachPayToggleListeners(document.getElementById('payments-list'));
     }
   }
 
