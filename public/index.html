@@ -648,6 +648,142 @@
   @media (max-width:520px){
     .attendee-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));}
   }
+
+  /* ---- Presença + Loot por membro ---- */
+  .mc-row{
+    display:flex; flex-direction:column; gap:6px;
+    padding:7px 8px;
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    font-size:0.85em;
+    background:var(--panel-2);
+    min-width:0;
+  }
+  .attendee-grid:has(.mc-row){grid-template-columns:repeat(auto-fill,minmax(175px,1fr));}
+  .mc-row.present{border-color:var(--arcane-dim);}
+  .mc-name{display:flex; align-items:center; gap:6px; font-weight:bold; color:var(--text); word-break:break-word;}
+  .mc-tag-new{font-size:0.7em; letter-spacing:0.5px; padding:1px 5px; border:1px solid var(--gold); color:var(--gold); border-radius:3px; font-weight:normal;}
+  .mc-boxes{display:flex; gap:6px; flex-wrap:wrap;}
+  .mc-box{
+    flex:1; display:flex; align-items:center; gap:5px;
+    padding:4px 6px;
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    cursor:pointer; user-select:none;
+    font-size:0.85em; color:var(--text-dim);
+    transition:all .12s ease;
+    min-width:0; white-space:nowrap;
+  }
+  .mc-box:hover{border-color:var(--text-dim); color:var(--text);}
+  .mc-check{
+    width:13px; height:13px; flex:0 0 auto;
+    border:1.5px solid var(--text-dim); border-radius:2px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:10px; line-height:1; color:#0a0c12;
+  }
+  .mc-box.on .mc-check::after{content:"✓"; font-weight:bold;}
+  .mc-box.presenca.on{border-color:var(--arcane); color:var(--arcane); background:rgba(53,208,192,0.08);}
+  .mc-box.presenca.on .mc-check{background:var(--arcane); border-color:var(--arcane);}
+  .mc-box.loot.on{border-color:var(--gold); color:var(--gold-bright); background:rgba(201,162,39,0.10);}
+  .mc-box.loot.on .mc-check{background:var(--gold); border-color:var(--gold);}
+  .mc-legend{font-size:0.75em; color:var(--text-dim); margin:-2px 0 8px;}
+  .member-row{flex-wrap:wrap; row-gap:6px;}
+  .member-row .name{min-width:110px;}
+  .btn-novato.on{border-color:var(--gold); color:var(--gold-bright);}
+
+  /* ---- Painel por membro ---- */
+  .dash-cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:8px;}
+  .dash-card{background:var(--panel-2); border:1px solid var(--border); border-radius:var(--radius); padding:10px 12px; min-width:0;}
+  .dash-card.zero{opacity:0.45;}
+  .dash-card .dc-label{font-size:0.72em; letter-spacing:1px; text-transform:uppercase; color:var(--text-dim);}
+  .dash-card .dc-value{font-size:1.6em; font-weight:bold; color:var(--gold-bright); line-height:1.2; margin-top:2px;}
+  .dash-card .dc-sub{font-size:0.72em; color:var(--text-dim); margin-top:2px;}
+  .dash-card .dc-pend{color:var(--danger-bright);}
+  .dash-card.medusa{border-color:var(--arcane-dim);}
+  .dash-card.medusa .dc-value{color:var(--arcane);}
+  .dash-stats{display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:8px; margin-bottom:4px;}
+  .dash-stat{border-left:2px solid var(--gold); padding:4px 10px;}
+  .dash-stat .ds-value{font-size:1.25em; font-weight:bold; color:var(--text);}
+  .dash-stat .ds-label{font-size:0.74em; color:var(--text-dim);}
+  .dash-bars{display:flex; flex-direction:column; gap:6px;}
+  .dash-bar-row{display:grid; grid-template-columns:110px 1fr 42px; align-items:center; gap:8px; font-size:0.82em;}
+  .dash-bar-wrap{height:10px; background:var(--panel-2); border:1px solid var(--border); border-radius:5px; overflow:hidden;}
+  .dash-bar-fill{height:100%; background:linear-gradient(90deg,var(--arcane-dim),var(--arcane));}
+  .dash-bar-count{text-align:right; font-family:'Courier New',monospace; color:var(--arcane);}
+  .dash-list{display:flex; flex-direction:column; gap:4px; max-height:320px; overflow-y:auto;}
+  .dash-item{display:flex; gap:8px; align-items:baseline; padding:6px 8px; background:var(--panel-2); border:1px solid var(--border); border-radius:var(--radius); font-size:0.82em;}
+  .dash-item .di-date{font-family:'Courier New',monospace; color:var(--text-dim); flex:0 0 auto;}
+  .dash-item .di-text{flex:1; min-width:0; word-break:break-word;}
+  .dash-item .di-paid{flex:0 0 auto; font-size:0.85em;}
+  .dash-item .di-paid.no{color:var(--danger-bright);}
+  .dash-item .di-paid.yes{color:var(--arcane);}
+  .dash-note{font-size:0.74em; color:var(--text-dim); margin-top:6px;}
+
+  /* ================= Visual 2026-11 (só CSS estático, sem efeitos pesados) ================= */
+  :root{ --radius:8px; --ok:#3fbf7f; --ok-dim:rgba(63,191,127,0.12); }
+  body{
+    background:
+      radial-gradient(1200px 500px at 50% -200px, rgba(201,162,39,0.10), transparent 70%),
+      radial-gradient(900px 400px at 100% 0%, rgba(53,208,192,0.06), transparent 70%),
+      #0a0c12;
+    background-attachment: scroll;
+  }
+  .panel{
+    border-radius:var(--radius);
+    border-color:#2a2618;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset, 0 6px 18px rgba(0,0,0,0.25);
+    padding:18px;
+  }
+  .panel-title{ display:flex; align-items:center; gap:8px; font-weight:bold; }
+  .panel-title::before{ content:""; width:6px; height:6px; transform:rotate(45deg); background:var(--gold); flex:0 0 auto; }
+  .tabs{ display:grid; grid-template-columns:repeat(auto-fit,minmax(118px,1fr)); gap:6px; }
+  .tab-btn{ border-radius:var(--radius); transition:color .12s, border-color .12s, background-color .12s; display:flex; align-items:center; justify-content:center; gap:6px; }
+  .tab-btn.active{ box-shadow: inset 0 -2px 0 var(--gold); }
+  .btn{ border-radius:6px; transition:background-color .12s, border-color .12s, color .12s; }
+  .btn:active{ transform:translateY(1px); }
+  .btn:focus-visible, .tab-btn:focus-visible, .mc-box:focus-visible, select:focus-visible, input:focus-visible{ outline:2px solid var(--arcane); outline-offset:2px; }
+  input[type="text"], input[type="date"], select, textarea{ border-radius:6px; }
+  /* lista de eventos: o navegador só desenha os cartões que estão na tela */
+  .event-card{
+    border-radius:var(--radius);
+    border-left:3px solid var(--border);
+    content-visibility:auto;
+    contain-intrinsic-size:auto 72px;
+    transition:border-color .12s;
+  }
+  .event-card:hover{ border-color:#4a4020; }
+  .event-card.res-vitoria{ border-left-color:var(--ok); }
+  .event-card.res-derrota{ border-left-color:var(--danger); }
+  .event-card.is-open{ border-color:var(--gold); border-left-width:3px; box-shadow:0 0 0 1px rgba(201,162,39,0.15); }
+  .event-head{ padding:12px 14px; }
+  .event-name{ font-size:0.98em; }
+  .event-count{
+    background:rgba(201,162,39,0.08); border:1px solid #3a321a; border-radius:999px;
+    padding:3px 9px; font-size:0.76em; white-space:nowrap;
+  }
+  .event-body{ background:rgba(0,0,0,0.15); }
+  /* Presença / Loot */
+  .mc-row{ border-radius:var(--radius); transition:border-color .1s; }
+  .mc-row.present{ background:linear-gradient(180deg, rgba(53,208,192,0.05), transparent); }
+  .mc-box{ border-radius:6px; padding:6px 8px; transition:background-color .1s, border-color .1s, color .1s; touch-action:manipulation; }
+  .mc-box:active{ transform:scale(0.98); }
+  .member-row{ border-radius:var(--radius); transition:border-color .12s; }
+  .member-row:hover{ border-color:#4a4020; }
+  .dash-card{ border-radius:var(--radius); }
+  .dash-card .dc-value{ font-variant-numeric: tabular-nums; }
+  .pay-toggle, .result-btn{ border-radius:6px; }
+  .toolbar{ border-top-color:#2a2618; }
+  @media (max-width:520px){
+    .panel{ padding:14px; }
+    .tabs{ grid-template-columns:repeat(2,1fr); }
+  }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+
+  .member-divider{ margin:12px 0 4px; padding-top:10px; border-top:1px dashed var(--border); font-size:0.75em; letter-spacing:0.5px; color:var(--text-dim); text-transform:uppercase; }
+  .member-row.inactive{ opacity:0.6; border-style:dashed; }
+  .member-row.inactive:hover{ opacity:0.85; }
+  .btn-reactivate{ border-color:var(--arcane); color:var(--arcane); }
+  .mc-tag-off{ border-color:var(--text-dim) !important; color:var(--text-dim) !important; }
 </style>
 </head>
 <body>
@@ -662,6 +798,9 @@
   var openEventId = null;
   var activeTab = 'eventos';
   var pendingDelete = null; // {kind, id} for confirm-on-second-click
+  var painelMemberId = null;   // membro escolhido na aba Painel
+  var painelPeriod = 'tudo';   // tudo | mes | mespassado | 30d
+  var editingMemberId = null; // membro com o nome em edição na aba Membros
   var drawing = false;
   var drawIntervalId = null;
   var openHistoricoEventId = null;
@@ -669,19 +808,23 @@
   var syncing = false;
 
   var EVENT_TYPES = [
-    'Maya - VIP','Maya - Principal',
-    'Death Beam - VIP - 05:30','Death Beam - VIP - 17:30',
-    'Death Beam - Principal - 06:30','Death Beam - Principal - 18:30',
-    'Hell Mine - VIP - 06:00','Hell Mine - VIP - 18:00',
-    'Hell Mine - Principal - 13:00','Hell Mine - Principal - 19:00',
-    'Phoenix - VIP - 06:35','Phoenix - VIP - 18:35',
-    'Phoenix - Principal - 07:30','Phoenix - Principal - 19:30',
-    'Medusa - VIP - 09:30','Medusa - VIP - 21:30',
-    'Medusa - Principal - 10:30','Medusa - Principal - 22:30',
-    'Kundum - VIP - 10:00','Kundum - VIP - 22:00',
-    'Kundum - Principal - 11:00','Kundum - Principal - 23:00',
-    'Selupan - Principal - 12:00','Selupan - Principal - 23:59',
-    'Outro'
+    'Hell Maine - Servidor Principal',
+    'Kundum - Servidor Principal',
+    'Phoenix - Servidor Principal',
+    'Death Beam - Servidor Principal',
+    'Medusa - Servidor Principal',
+    'Selupan - Servidor Principal',
+    'Erohim - Servidor Principal',
+    'Maya - Servidor Principal',
+    'Hell Maine - Servidor VIP',
+    'Kundum - Servidor VIP',
+    'Phoenix - Servidor VIP',
+    'Death Beam - Servidor VIP',
+    'Medusa - Servidor VIP',
+    'Selupan - Servidor VIP',
+    'Erohim - Servidor VIP',
+    'Maya - Servidor VIP',
+    'Devias War'
   ];
 
   var EVENT_INFO = {
@@ -708,8 +851,30 @@
     'Selupan - Principal - 12:00': {local:'Raklion', reward:'Talismã Keep', icon:'🔮'},
     'Selupan - Principal - 23:59': {local:'Raklion', reward:'Talismã Keep', icon:'🔮'},
     'Maya - VIP': {local:'Kanturu 3', reward:'Joias', icon:'💎'},
-    'Maya - Principal': {local:'Kanturu 3', reward:'Joias', icon:'💎'}
+    'Maya - Principal': {local:'Kanturu 3', reward:'Joias', icon:'💎'},
+    // nova tabela (os nomes antigos acima ficam para os eventos já registrados)
+    'Hell Maine - Servidor Principal': {local:'Aida 2', reward:'Joias', icon:'💎'},
+    'Hell Maine - Servidor VIP': {local:'Aida 2', reward:'Joias', icon:'💎'},
+    'Kundum - Servidor Principal': {local:'Kalima', reward:'Joias', icon:'💎'},
+    'Kundum - Servidor VIP': {local:'Kalima', reward:'Joias', icon:'💎'},
+    'Phoenix - Servidor Principal': {local:'Icarus', reward:'Pena e Crest', icon:'🪶'},
+    'Phoenix - Servidor VIP': {local:'Icarus', reward:'Pena e Crest', icon:'🪶'},
+    'Death Beam - Servidor Principal': {local:'Tarkan', reward:'Pena e Crest', icon:'🪶'},
+    'Death Beam - Servidor VIP': {local:'Tarkan', reward:'Pena e Crest', icon:'🪶'},
+    'Medusa - Servidor Principal': {local:'Calmness', reward:'Rings e Pendants', icon:'💍'},
+    'Medusa - Servidor VIP': {local:'Calmness', reward:'Rings e Pendants', icon:'💍'},
+    'Selupan - Servidor Principal': {local:'Raklion', reward:'Talismã Keep', icon:'🔮'},
+    'Selupan - Servidor VIP': {local:'Raklion', reward:'Talismã Keep', icon:'🔮'},
+    'Maya - Servidor Principal': {local:'Kanturu 3', reward:'Joias', icon:'💎'},
+    'Maya - Servidor VIP': {local:'Kanturu 3', reward:'Joias', icon:'💎'},
+    'Devias War': {local:'Devias', reward:'Guerra de guild', icon:'⚔️'}
   };
+
+  // data de hoje no fuso local (toISOString usa UTC e virava o dia às 21h no Brasil)
+  function localToday(){
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
 
   function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
 
@@ -721,6 +886,9 @@
     'Medusa': 0.15,
     'Kundum': 0.07,
     'Selupan': 0.10,
+    'Hell Maine': 0.07,
+    'Erohim': 0.10,
+    'Devias War': 0.20,
     'Outro': 0
   };
 
@@ -755,7 +923,7 @@
   function computeMemberChance(memberId, dateStr){
     var chance = 1; // base — todo mundo começa com chance 1
     state.events.forEach(function(ev){
-      if(ev.date === dateStr && ev.attendees.indexOf(memberId) !== -1){
+      if(ev.date === dateStr && getLootList(ev).indexOf(memberId) !== -1){
         var fam = getEventFamily(ev.type);
         var w = state.eventWeights.hasOwnProperty(fam) ? state.eventWeights[fam] : 0;
         chance += w;
@@ -808,6 +976,12 @@
     state.events.forEach(function(ev){
       if(typeof ev.result === 'undefined') ev.result = null;
       if(typeof ev.enemyGuild === 'undefined') ev.enemyGuild = '';
+      // eventos antigos (antes da caixa Loot): todos os presentes eram elegíveis ao loot
+      if(!Array.isArray(ev.lootEligible)) ev.lootEligible = ev.attendees.slice();
+    });
+    state.members.forEach(function(m){
+      if(typeof m.novato === 'undefined') m.novato = false;
+      if(typeof m.active === 'undefined') m.active = true;
     });
     if(!state.eventWeights) state.eventWeights = {};
     Object.keys(DEFAULT_EVENT_WEIGHTS).forEach(function(fam){
@@ -833,9 +1007,16 @@
   }
 
   var saveTimeout = null;
+  var localRev = 0;        // aumenta a cada alteração local
+  var savePending = false; // há alteração esperando para ser enviada
+  var saveInFlight = 0;    // envios em andamento
   function saveData(showStatus){
+    localRev++;
+    savePending = true;
     clearTimeout(saveTimeout);
     saveTimeout = setTimeout(async function(){
+      savePending = false;
+      saveInFlight++;
       try{
         var res = await fetch(API_URL, {
           method: 'POST',
@@ -847,6 +1028,8 @@
         if(showStatus) setStatus(result && result.ok ? 'Salvo.' : 'Falha ao salvar. Tente novamente.');
       }catch(e){
         setStatus('Erro ao salvar: sem conexão com o servidor.');
+      } finally {
+        saveInFlight--;
       }
     }, 250);
   }
@@ -860,15 +1043,24 @@
   }
 
   async function pollForUpdates(){
-    if(syncing || drawing || isUserTyping() || pendingDelete) return;
+    if(syncing || drawing || isUserTyping() || pendingDelete || editingMemberId) return;
+    if(savePending || saveInFlight) return; // há clique ainda não salvo: não sobrescrever
     syncing = true;
+    var revAtStart = localRev;
     try{
       var res = await fetch(API_URL, { cache: 'no-store' });
       var json = await res.json();
-      if(json && JSON.stringify(json) !== JSON.stringify(state)){
+      // se houve clique enquanto a busca acontecia, descarta a resposta (ela já está velha)
+      if(json && localRev === revAtStart && !savePending && !saveInFlight){
+        var prev = state;
+        var prevJson = JSON.stringify(prev);
         state = json;
         normalizeState();
-        render();
+        if(JSON.stringify(state) === prevJson){
+          state = prev; // nada mudou de verdade: não redesenha a tela
+        } else {
+          render();
+        }
       }
     }catch(e){ /* silencioso — mantém os dados atuais na tela */ }
     syncing = false;
@@ -914,26 +1106,53 @@
     name = (name||'').trim();
     if(!name) return null;
     var existing = state.members.find(function(m){return m.name.toLowerCase()===name.toLowerCase();});
-    if(existing) return existing.id;
-    var m = { id: uid(), name: name };
+    if(existing){
+      if(!isActive(existing)){ existing.active = true; saveData(true); setStatus('"'+existing.name+'" já existia e foi reativado (histórico mantido).'); }
+      return existing.id;
+    }
+    var m = { id: uid(), name: name, novato: false, active: true };
     state.members.push(m);
     saveData();
     return m.id;
+  }
+
+  // Renomeia o membro. Presença, loot e ranking usam o id (não mudam);
+  // o histórico de sorteios/pagamentos guarda o nome, então ele é atualizado junto
+  // para os prêmios continuarem ligados à mesma pessoa.
+  function renameMember(id, newName){
+    newName = (newName||'').trim();
+    var m = state.members.find(function(x){return x.id===id;});
+    if(!m) return false;
+    if(!newName){ setStatus('O nome não pode ficar vazio.'); return false; }
+    var oldName = m.name;
+    if(newName === oldName){ return true; }
+    var clash = state.members.find(function(x){ return x.id!==id && x.name.toLowerCase()===newName.toLowerCase(); });
+    if(clash){ setStatus('Já existe um membro chamado "'+clash.name+'".'); return false; }
+    m.name = newName;
+    state.draws.forEach(function(d){
+      (d.pairs||[]).forEach(function(p){ if(p.winner === oldName) p.winner = newName; });
+      if(Array.isArray(d.participants)) d.participants = d.participants.map(function(n){ return n === oldName ? newName : n; });
+      if(Array.isArray(d.chances)) d.chances.forEach(function(c){ if(c.name === oldName) c.name = newName; });
+    });
+    saveData(true);
+    setStatus('"'+oldName+'" agora é "'+newName+'".');
+    return true;
   }
 
   function removeMember(id){
     state.members = state.members.filter(function(m){return m.id!==id;});
     state.events.forEach(function(ev){
       ev.attendees = ev.attendees.filter(function(a){return a!==id;});
+      ev.lootEligible = getLootList(ev).filter(function(a){return a!==id;});
     });
     saveData();
     render();
   }
 
   function addEvent(name, type, date){
-    if(!date) date = new Date().toISOString().slice(0,10);
+    if(!date) date = localToday();
     if(!name) name = type;
-    var ev = { id: uid(), name: name, type: type, date: date, attendees: [], result: null, enemyGuild: '' };
+    var ev = { id: uid(), name: name, type: type, date: date, attendees: [], lootEligible: [], result: null, enemyGuild: '' };
     state.events.unshift(ev);
     saveData();
     return ev.id;
@@ -961,12 +1180,84 @@
     saveData(true);
   }
 
+  function getLootList(ev){
+    if(!Array.isArray(ev.lootEligible)) ev.lootEligible = ev.attendees.slice();
+    return ev.lootEligible;
+  }
+
+  function isActive(m){ return !m || m.active !== false; }
+  function activeMembers(){ return state.members.filter(isActive); }
+
+  // Desativar não apaga nada: presenças, prêmios e pagamentos ficam no histórico
+  function toggleActive(memberId){
+    var m = state.members.find(function(x){return x.id===memberId;});
+    if(!m) return;
+    m.active = !isActive(m);
+    if(editingMemberId === memberId) editingMemberId = null;
+    saveData(true);
+    setStatus(m.active ? '"'+m.name+'" reativado.' : '"'+m.name+'" desativado — histórico preservado.');
+    render();
+  }
+
+  function isNovato(memberId){
+    var m = state.members.find(function(x){return x.id===memberId;});
+    return !!(m && m.novato);
+  }
+
+  // Atualiza só os elementos do membro clicado (sem redesenhar a tela inteira)
+  function refreshMemberToggleUI(ev, memberId){
+    var key = ev.id + '|' + memberId;
+    var aEl = document.querySelector('[data-toggle-attend="'+key+'"]');
+    var lEl = document.querySelector('[data-toggle-loot="'+key+'"]');
+    if(!aEl || !lEl){ render(); return; }
+    var present = ev.attendees.indexOf(memberId) !== -1;
+    var loot = getLootList(ev).indexOf(memberId) !== -1;
+    aEl.classList.toggle('on', present);
+    lEl.classList.toggle('on', loot);
+    var row = aEl.closest('.mc-row'); if(row) row.classList.toggle('present', present);
+    var cnt = document.querySelector('[data-toggle-event="'+ev.id+'"] .event-count');
+    if(cnt) cnt.textContent = ev.attendees.length+' presentes · '+getLootList(ev).length+' loot';
+  }
+
+  // Presença: marcar inclui no loot automaticamente (exceto membros novos); desmarcar tira dos dois
   function toggleAttendance(eventId, memberId){
     var ev = state.events.find(function(e){return e.id===eventId;});
     if(!ev) return;
+    var loot = getLootList(ev);
     var idx = ev.attendees.indexOf(memberId);
-    if(idx === -1) ev.attendees.push(memberId); else ev.attendees.splice(idx,1);
+    if(idx === -1){
+      ev.attendees.push(memberId);
+      if(!isNovato(memberId) && loot.indexOf(memberId) === -1) loot.push(memberId);
+    } else {
+      ev.attendees.splice(idx,1);
+      var li = loot.indexOf(memberId);
+      if(li !== -1) loot.splice(li,1);
+    }
     saveData();
+    refreshMemberToggleUI(ev, memberId);
+  }
+
+  // Loot: quem concorre ao loot também foi ao evento, então marcar Loot marca Presença
+  function toggleLoot(eventId, memberId){
+    var ev = state.events.find(function(e){return e.id===eventId;});
+    if(!ev) return;
+    var loot = getLootList(ev);
+    var li = loot.indexOf(memberId);
+    if(li === -1){
+      loot.push(memberId);
+      if(ev.attendees.indexOf(memberId) === -1) ev.attendees.push(memberId);
+    } else {
+      loot.splice(li,1);
+    }
+    saveData();
+    refreshMemberToggleUI(ev, memberId);
+  }
+
+  function toggleNovato(memberId){
+    var m = state.members.find(function(x){return x.id===memberId;});
+    if(!m) return;
+    m.novato = !m.novato;
+    saveData(true);
     render();
   }
 
@@ -1030,7 +1321,8 @@
     var membrosRows = state.members.map(function(m){
       var count = memberEventCount(m.id);
       var pct = state.events.length ? Math.round((count/state.events.length)*100) : 0;
-      return { 'Nome': m.name, 'Eventos participados': count, 'Total de eventos': state.events.length, '% de presença': pct };
+      var lootCount = state.events.filter(function(ev){ return getLootList(ev).indexOf(m.id) !== -1; }).length;
+      return { 'Nome': m.name, 'Ativo': isActive(m) ? 'Sim' : 'Não', 'Membro novo (sem loot)': m.novato ? 'Sim' : 'Não', 'Eventos participados': count, 'Eventos com loot': lootCount, 'Total de eventos': state.events.length, '% de presença': pct };
     });
     var wsMembros = XLSX.utils.json_to_sheet(membrosRows);
     XLSX.utils.book_append_sheet(wb, wsMembros, 'Membros');
@@ -1042,6 +1334,7 @@
         'Data': ev.date, 'Tipo': ev.type, 'Nome do evento': ev.name,
         'Local': info.local, 'Recompensa padrão': info.reward,
         'Total de participantes': ev.attendees.length,
+        'Elegíveis ao loot': getLootList(ev).length,
         'Resultado': ev.result === 'vitoria' ? 'Vitória' : (ev.result === 'derrota' ? 'Derrota' : ''),
         'Guild vencedora (se derrota)': ev.result === 'derrota' ? ev.enemyGuild : ''
       };
@@ -1055,7 +1348,8 @@
       var row = { 'Membro': m.name };
       sortedEvents.forEach(function(ev){
         var label = ev.date + ' - ' + ev.name;
-        row[label] = ev.attendees.indexOf(m.id) !== -1 ? 'X' : '';
+        // X = presente e no loot · P = só presença (sem loot)
+        row[label] = ev.attendees.indexOf(m.id) !== -1 ? (getLootList(ev).indexOf(m.id) !== -1 ? 'X' : 'P') : '';
       });
       return row;
     });
@@ -1074,8 +1368,8 @@
       XLSX.utils.book_append_sheet(wb, wsSorteios, 'Sorteios');
     }
 
-    var todayStr = new Date().toISOString().slice(0,10);
-    var fileName = sanitizeFileName(todayStr + ', ' + (state.guildName || 'guild') + ' - presencas') + '.xlsx';
+    var todayStr = localToday();
+    var fileName = sanitizeFileName(todayStr + ', ' + 'WAKANDA - presencas') + '.xlsx';
     XLSX.writeFile(wb, fileName);
     setStatus('Planilha baixada.');
   }
@@ -1095,12 +1389,14 @@
       'Data': ev.date, 'Tipo': ev.type, 'Nome do evento': ev.name,
       'Local': info.local, 'Recompensa padrão': info.reward,
       'Total de participantes': ev.attendees.length,
+      'Elegíveis ao loot': getLootList(ev).length,
       'Resultado': ev.result === 'vitoria' ? 'Vitória' : (ev.result === 'derrota' ? 'Derrota' : ''),
       'Guild vencedora (se derrota)': ev.result === 'derrota' ? ev.enemyGuild : ''
     }];
     XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(eventRows), 'Evento');
 
-    var presencaRows = ev.attendees.map(function(mid){ return { 'Membro presente': getMemberName(mid) }; });
+    var evLoot = getLootList(ev);
+    var presencaRows = ev.attendees.map(function(mid){ return { 'Membro presente': getMemberName(mid), 'Loot': evLoot.indexOf(mid) !== -1 ? 'Sim' : 'Não' }; });
     if(presencaRows.length === 0) presencaRows = [{ 'Membro presente': '(nenhum registrado)' }];
     XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(presencaRows), 'Presenca');
 
@@ -1169,12 +1465,12 @@
     var pool = [];
 
     if(source === 'roster'){
-      pool = state.members.map(function(m){return m.name;});
+      pool = activeMembers().filter(function(m){return !m.novato;}).map(function(m){return m.name;});
     } else if(source === 'evento'){
       var evId = document.getElementById('draw-event-select').value;
       var ev = state.events.find(function(e){return e.id===evId;});
       if(!ev){ setStatus('Selecione um evento válido.'); return; }
-      pool = ev.attendees.map(getMemberName);
+      pool = getLootList(ev).map(getMemberName);
     } else {
       var raw = document.getElementById('draw-custom-list').value;
       pool = raw.split('\n').map(function(s){return s.trim();}).filter(function(s){return s.length>0;});
@@ -1223,12 +1519,13 @@
       return;
     }
     var dateInput = document.getElementById('draw-date');
-    var dateStr = dateInput ? dateInput.value : new Date().toISOString().slice(0,10);
+    var dateStr = dateInput ? dateInput.value : localToday();
     if(!dateStr){ setStatus('Selecione uma data.'); return; }
 
-    var entries = state.members.map(function(m){
+    var entries = activeMembers().filter(function(m){ return !m.novato; }).map(function(m){
       return { name: m.name, weight: computeMemberChance(m.id, dateStr) };
     });
+    if(entries.length === 0){ setStatus('Nenhum membro elegível ao loot.'); return; }
 
     var excludePrev = document.getElementById('draw-exclude-prev').checked;
     if(excludePrev){
@@ -1284,7 +1581,7 @@
   function finalizeDraw(pool, winners, prizes, sourceLabel, eventId, meta){
     drawing = false;
     var pairs = winners.map(function(w, idx){ return { winner: w, prize: prizes[idx] || '', paid: false }; });
-    var d = { id: uid(), date: new Date().toISOString().slice(0,10), source: sourceLabel, eventId: eventId || null, participants: pool.slice(), pairs: pairs };
+    var d = { id: uid(), date: localToday(), source: sourceLabel, eventId: eventId || null, participants: pool.slice(), pairs: pairs };
     if(meta && meta.chances){
       d.chances = meta.chances.map(function(c){ return { name: c.name, weight: c.weight }; });
     }
@@ -1314,6 +1611,8 @@
       html += renderMembrosTab();
     } else if(activeTab === 'sorteio'){
       html += renderSorteioTab();
+    } else if(activeTab === 'painel'){
+      html += renderPainelTab();
     } else if(activeTab === 'ranking'){
       html += renderRankingTab();
     } else if(activeTab === 'historico'){
@@ -1339,15 +1638,15 @@
     '<div class="header">' +
       '<div class="emblem">⛨</div>' +
       '<div class="header-text">' +
-        '<input class="guild-name-input" id="guild-name-input" value="'+esc(state.guildName)+'" placeholder="NOME DA GUILD">' +
+        '<div class="guild-name-input" style="cursor:default;">WAKANDA</div>' +
         '<div><span class="subtitle-pill">Controle de Presença &amp; Sorteios</span></div>' +
       '</div>' +
-      '<div class="guild-crest">'+esc((state.guildName||'?').trim().charAt(0).toUpperCase() || '?')+'</div>' +
+      '<div class="guild-crest">W</div>' +
     '</div>';
   }
 
   function renderFooter(){
-    var name = (state.guildName || 'GUILD').toUpperCase();
+    var name = 'WAKANDA';
     return '<div class="footer-tagline">União ✦ Força ✦ Honra ✦ '+esc(name)+'</div>';
   }
 
@@ -1356,8 +1655,9 @@
     return '' +
     '<div class="tabs">' +
       '<button class="tab-btn'+(activeTab==='eventos'?' active':'')+'" data-tab="eventos"><span class="tab-icon">⚔️</span>Eventos</button>' +
-      '<button class="tab-btn'+(activeTab==='membros'?' active':'')+'" data-tab="membros"><span class="tab-icon">📜</span>Membros ('+state.members.length+')</button>' +
+      '<button class="tab-btn'+(activeTab==='membros'?' active':'')+'" data-tab="membros"><span class="tab-icon">📜</span>Membros ('+activeMembers().length+')</button>' +
       '<button class="tab-btn'+(activeTab==='sorteio'?' active':'')+'" data-tab="sorteio"><span class="tab-icon">🎲</span>Sorteio</button>' +
+      '<button class="tab-btn'+(activeTab==='painel'?' active':'')+'" data-tab="painel"><span class="tab-icon">📊</span>Painel</button>' +
       '<button class="tab-btn'+(activeTab==='ranking'?' active':'')+'" data-tab="ranking"><span class="tab-icon">🏆</span>Ranking</button>' +
       '<button class="tab-btn'+(activeTab==='historico'?' active':'')+'" data-tab="historico"><span class="tab-icon">📖</span>Histórico</button>' +
       '<button class="tab-btn'+(activeTab==='pagamentos'?' active':'')+'" data-tab="pagamentos"><span class="tab-icon">💰</span>Pagamentos'+(pendingCount>0?'<span class="tab-badge">'+pendingCount+'</span>':'')+'</button>' +
@@ -1373,19 +1673,36 @@
     html += '</div></div>';
 
     html += '<div class="panel">';
-    html += '<div class="panel-title">Roster ('+state.members.length+')</div>';
+    var inactiveCount = state.members.length - activeMembers().length;
+    html += '<div class="panel-title">Roster ('+activeMembers().length+' ativos'+(inactiveCount?' · '+inactiveCount+(inactiveCount===1?' inativo':' inativos'):'')+')</div>';
     if(state.members.length === 0){
       html += '<div class="empty-msg">Nenhum membro cadastrado ainda.</div>';
     } else {
       html += '<div class="member-list">';
-      var sorted = state.members.slice().sort(function(a,b){return a.name.localeCompare(b.name);});
+      var byName = function(a,b){return a.name.localeCompare(b.name);};
+      var sorted = activeMembers().sort(byName).concat(state.members.filter(function(m){ return !isActive(m); }).sort(byName));
+      var dividerDone = false;
       sorted.forEach(function(m){
+        if(!isActive(m) && !dividerDone){
+          dividerDone = true;
+          html += '<div class="member-divider">Ex-membros (inativos) — o histórico de presenças e prêmios continua guardado</div>';
+        }
         var count = memberEventCount(m.id);
         var prizeCount = getMemberPrizes(m.id).length;
         var isPending = pendingDelete && pendingDelete.kind==='member' && pendingDelete.id===m.id;
-        html += '<div class="member-row">';
+        html += '<div class="member-row'+(isActive(m)?'':' inactive')+'">';
+        if(editingMemberId === m.id){
+          html += '<input type="text" class="name" id="edit-member-input" data-edit-input="'+m.id+'" value="'+esc(m.name)+'" style="flex:1;min-width:120px;">';
+          html += '<button class="btn btn-sm btn-arcane" data-save-member="'+m.id+'">Salvar</button>';
+          html += '<button class="btn btn-sm btn-ghost" data-cancel-edit="1">Cancelar</button>';
+          html += '</div>';
+          return;
+        }
         html += '<span class="name">'+esc(m.name)+'</span>';
         html += '<span class="count">'+count+'/'+state.events.length+' eventos'+(prizeCount>0 ? ' · 🏆 '+prizeCount : '')+'</span>';
+        html += '<button class="btn btn-sm btn-ghost" data-edit-member="'+m.id+'" title="Editar nome">✎ Editar</button>';
+        html += '<button class="btn btn-sm btn-ghost'+(isActive(m)?'':' btn-reactivate')+'" data-toggle-active="'+m.id+'" title="'+(isActive(m)?'Tira o membro das listas de presença e sorteio, sem apagar o histórico':'Volta o membro para as listas de presença e sorteio')+'">'+(isActive(m)?'Desativar':'Reativar')+'</button>';
+        if(isActive(m)) html += '<button class="btn btn-sm btn-ghost btn-novato'+(m.novato?' on':'')+'" data-toggle-novato="'+m.id+'" title="Membro novo: a caixa Loot vem desmarcada e ele fica fora dos sorteios do roster e por pontuação">'+(m.novato?'Novo · sem loot':'Liberado p/ loot')+'</button>';
         html += '<button class="btn btn-sm '+(isPending?'btn-danger':'btn-ghost')+'" data-del-member="'+m.id+'">'+(isPending?'Confirmar':'Remover')+'</button>';
         html += '</div>';
       });
@@ -1417,7 +1734,7 @@
     html += '<select id="new-event-type" style="flex:1;min-width:150px;">';
     EVENT_TYPES.forEach(function(t){ html += '<option value="'+esc(t)+'">'+esc(t)+'</option>'; });
     html += '</select>';
-    html += '<input type="date" id="new-event-date" value="'+new Date().toISOString().slice(0,10)+'">';
+    html += '<input type="date" id="new-event-date" value="'+localToday()+'">';
     html += '</div>';
     html += '<div class="row">';
     html += '<input type="text" id="new-event-name" placeholder="Nome/observação do evento (opcional)" style="flex:1;min-width:160px;">';
@@ -1433,7 +1750,7 @@
       state.events.forEach(function(ev){
         var isOpen = openEventId === ev.id;
         var isPending = pendingDelete && pendingDelete.kind==='event' && pendingDelete.id===ev.id;
-        html += '<div class="event-card">';
+        html += '<div class="event-card'+(isOpen?' is-open':'')+(ev.result?' res-'+ev.result:'')+'">';
         html += '<div class="event-head" data-toggle-event="'+ev.id+'">';
         html += '<span class="event-type-dot"></span>';
         html += '<div class="event-info">';
@@ -1444,12 +1761,13 @@
           html += '<div class="event-extra">📍 '+esc(info.local)+' &nbsp;·&nbsp; '+info.icon+' '+esc(info.reward)+'</div>';
         }
         html += '</div>';
-        html += '<span class="event-count">'+ev.attendees.length+' presentes</span>';
+        html += '<span class="event-count">'+ev.attendees.length+' presentes · '+getLootList(ev).length+' loot</span>';
         if(ev.result === 'vitoria') html += '<span class="event-badge vitoria" title="Vitória">🏆<br>VIT</span>';
         if(ev.result === 'derrota') html += '<span class="event-badge derrota" title="Derrota'+(ev.enemyGuild?' vs '+esc(ev.enemyGuild):'')+'">💀<br>DER</span>';
         html += '<span class="chevron'+(isOpen?' open':'')+'">&#9656;</span>';
         html += '</div>';
-        html += '<div class="event-body'+(isOpen?' open':'')+'">';
+        if(isOpen){ // só monta o conteúdo do evento aberto (antes montava os 477, deixando a tela pesada)
+        html += '<div class="event-body open">';
         html += '<div class="result-section">';
         html += '<div class="result-label">Resultado do evento</div>';
         html += '<div class="result-btns">';
@@ -1465,11 +1783,19 @@
         if(state.members.length === 0){
           html += '<div class="empty-msg">Cadastre membros na aba "Membros" para marcar presença.</div>';
         } else {
+          html += '<div class="mc-legend">Presença = foi ao evento (conta no ranking) · Loot = participa do sorteio</div>';
           html += '<div class="attendee-grid">';
-          state.members.slice().sort(function(a,b){return a.name.localeCompare(b.name);}).forEach(function(m){
-            var checked = ev.attendees.indexOf(m.id) !== -1;
-            html += '<div class="rune-toggle'+(checked?' checked':'')+'" data-toggle-attend="'+ev.id+'|'+m.id+'">';
-            html += '<span class="rune"></span><span>'+esc(m.name)+'</span>';
+          var lootList = getLootList(ev);
+          state.members.filter(function(m){ return isActive(m) || ev.attendees.indexOf(m.id) !== -1 || lootList.indexOf(m.id) !== -1; })
+            .sort(function(a,b){return a.name.localeCompare(b.name);}).forEach(function(m){
+            var present = ev.attendees.indexOf(m.id) !== -1;
+            var hasLoot = lootList.indexOf(m.id) !== -1;
+            html += '<div class="mc-row'+(present?' present':'')+'">';
+            html += '<div class="mc-name">'+esc(m.name)+(m.novato?' <span class="mc-tag-new" title="Membro novo: entra sem loot por padrão">NOVO</span>':'')+(!isActive(m)?' <span class="mc-tag-new mc-tag-off">INATIVO</span>':'')+'</div>';
+            html += '<div class="mc-boxes">';
+            html += '<div class="mc-box presenca'+(present?' on':'')+'" data-toggle-attend="'+ev.id+'|'+m.id+'"><span class="mc-check"></span>Presença</div>';
+            html += '<div class="mc-box loot'+(hasLoot?' on':'')+'" data-toggle-loot="'+ev.id+'|'+m.id+'"><span class="mc-check"></span>Loot</div>';
+            html += '</div>';
             html += '</div>';
           });
           html += '</div>';
@@ -1477,6 +1803,7 @@
         html += '<button class="btn btn-sm btn-arcane" data-export-event="'+ev.id+'">Exportar evento</button> ';
         html += '<button class="btn btn-sm '+(isPending?'btn-danger':'btn-ghost')+'" data-del-event="'+ev.id+'">'+(isPending?'Confirmar exclusão':'Excluir evento')+'</button>';
         html += '</div>';
+        }
         html += '</div>';
       });
     }
@@ -1638,9 +1965,9 @@
   }
 
   var DRAW_SOURCE_HINTS = {
-    'pontuacao': 'Sorteia entre todo o roster, dando mais chance pra quem participou de mais eventos hoje.',
-    'roster': 'Sorteia entre todo o roster, com chance igual pra todo mundo, sem considerar presença.',
-    'evento': 'Sorteia só entre quem marcou presença num evento específico.',
+    'pontuacao': 'Sorteia entre o roster (menos membros novos), dando mais chance pra quem esteve no loot de mais eventos hoje.',
+    'roster': 'Sorteia entre o roster (menos membros novos), com chance igual pra todo mundo, sem considerar presença.',
+    'evento': 'Sorteia só entre quem está com a caixa Loot marcada num evento específico.',
     'lista': 'Sorteia entre uma lista de nomes que você digitar na hora, fora do roster salvo.'
   };
 
@@ -1656,14 +1983,14 @@
         html += '<option value="">Nenhum evento registrado</option>';
       } else {
         state.events.forEach(function(ev){
-          html += '<option value="'+ev.id+'">'+esc(ev.name)+' — '+esc(ev.date)+' ('+ev.attendees.length+' presentes)</option>';
+          html += '<option value="'+ev.id+'">'+esc(ev.name)+' — '+esc(ev.date)+' ('+ev.attendees.length+' presentes · '+getLootList(ev).length+' no loot)</option>';
         });
       }
       html += '</select></div>';
     } else if(source === 'lista'){
       html += '<textarea id="draw-custom-list" placeholder="Um nome por linha"></textarea>';
     } else if(source === 'pontuacao'){
-      var todayStr = new Date().toISOString().slice(0,10);
+      var todayStr = localToday();
       html += '<div class="row" style="margin-bottom:8px;">';
       html += '<input type="date" id="draw-date" value="'+todayStr+'">';
       html += '</div>';
@@ -1681,12 +2008,12 @@
     var container = document.getElementById('draw-score-preview');
     if(!container) return;
     var dateEl = document.getElementById('draw-date');
-    var dateStr = dateEl ? dateEl.value : new Date().toISOString().slice(0,10);
+    var dateStr = dateEl ? dateEl.value : localToday();
     if(state.members.length === 0){
       container.innerHTML = '<div class="empty-msg">Cadastre membros no roster para calcular a pontuação.</div>';
       return;
     }
-    var rows = state.members.map(function(m){
+    var rows = activeMembers().filter(function(m){ return !m.novato; }).map(function(m){
       return { name: m.name, chance: computeMemberChance(m.id, dateStr) };
     }).sort(function(a,b){ return b.chance - a.chance; });
     var total = rows.reduce(function(s,r){ return s+r.chance; }, 0);
@@ -1701,6 +2028,217 @@
   }
 
   window.__muRerenderSourceFields = renderDrawSourceFields;
+
+  // ================= PAINEL POR MEMBRO (somente leitura) =================
+  var PRIZE_CATEGORIES = [
+    { key:'soul',     label:'Soul',     re:/\bSOUL/ },
+    { key:'bless',    label:'Bless',    re:/\bBLE+S+\b|\bBLESS/ },
+    { key:'keep',     label:'Keep',     re:/\bKEE?PP?\b|\bKEEP/ },
+    { key:'pena',     label:'Pena',     re:/\bPENA\b|FEATHER/ },
+    { key:'crest',    label:'Crest',    re:/\bCREST/ },
+    { key:'cash',     label:'Cash',     re:/\bCASH/ },
+    { key:'tca',      label:'TCA',      re:/\bTCA\b/ },
+    { key:'chaos',    label:'Chaos',    re:/\bCHAOS/ },
+    { key:'life',     label:'Life',     re:/\bLIFE\b/ },
+    { key:'creation', label:'Creation', re:/\bCREATION/ },
+    { key:'packjoia', label:'Pack de Joia', re:/PACK DE JOIA/ }
+  ];
+  var MAIN_CATS = ['soul','bless','keep','pena','crest','cash','tca'];
+  var EXTRA_CATS = ['chaos','life','creation','packjoia'];
+
+  // Lê o texto do prêmio: "10 SOUL" = 10 souls; "3 - RING..." = 3º lugar (1 item); "CREST" = 1
+  function classifyPrize(prizeText, drawSource){
+    var t = String(prizeText||'').toUpperCase().trim();
+    var qty = 1, rest = t, position = null;
+    var pos = t.match(/^(\d+)\s*-\s*(.*)$/);
+    if(pos){ position = +pos[1]; rest = pos[2]; }
+    else {
+      var q = t.match(/^(\d+)\s+(.*)$/);
+      if(q){ qty = +q[1]; rest = q[2]; }
+      else if(/^\d+$/.test(t)){ position = +t; rest = ''; }
+    }
+    var lugar = rest.match(/^LUGAR$/);
+    if(lugar){ position = qty; qty = 1; rest = ''; }
+    var isMedusaSource = /MEDUSA/i.test(drawSource||'');
+    if(isMedusaSource || /\bRING\b|PEND|PEDANT/.test(rest)){
+      return { cat:'medusa', qty:1, position: position, desc: rest };
+    }
+    for(var i=0;i<PRIZE_CATEGORIES.length;i++){
+      if(PRIZE_CATEGORIES[i].re.test(rest)) return { cat: PRIZE_CATEGORIES[i].key, qty: qty, position: position, desc: rest };
+    }
+    return { cat:'outros', qty: qty, position: position, desc: t };
+  }
+
+  function painelPeriodRange(){
+    var today = localToday();
+    if(painelPeriod === 'mes') return { from: today.slice(0,7)+'-01', to: today };
+    if(painelPeriod === 'mespassado'){
+      var d = new Date(); d.setDate(1); d.setMonth(d.getMonth()-1);
+      var y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0');
+      var last = new Date(y, d.getMonth()+1, 0).getDate();
+      return { from: y+'-'+m+'-01', to: y+'-'+m+'-'+String(last).padStart(2,'0') };
+    }
+    if(painelPeriod === '30d'){
+      var d2 = new Date(); d2.setDate(d2.getDate()-29);
+      var f = d2.getFullYear()+'-'+String(d2.getMonth()+1).padStart(2,'0')+'-'+String(d2.getDate()).padStart(2,'0');
+      return { from: f, to: today };
+    }
+    return null;
+  }
+  function inRange(dateStr, range){ return !range || (dateStr >= range.from && dateStr <= range.to); }
+
+  function bossFamilyLabel(type){
+    var fam = getEventFamily(type || 'Outro').trim();
+    if(/^hell m/i.test(fam)) return 'Hell Maine';
+    if(/^erohim/i.test(fam) || /erohim/i.test(fam)) return 'Erohim';
+    return fam.charAt(0).toUpperCase() + fam.slice(1).toLowerCase().replace(/\b(\w)/g, function(c){ return c.toUpperCase(); });
+  }
+
+  function computeMemberDashboard(memberId){
+    var m = state.members.find(function(x){ return x.id===memberId; });
+    if(!m) return null;
+    var range = painelPeriodRange();
+    var events = state.events.filter(function(ev){ return inRange(ev.date, range); });
+    var attended = events.filter(function(ev){ return ev.attendees.indexOf(m.id) !== -1; });
+    var withLoot = events.filter(function(ev){ return getLootList(ev).indexOf(m.id) !== -1; });
+    var byBoss = {};
+    attended.forEach(function(ev){ var k = bossFamilyLabel(ev.type); byBoss[k] = (byBoss[k]||0) + 1; });
+
+    var cats = {};
+    PRIZE_CATEGORIES.concat([{key:'medusa'},{key:'outros'}]).forEach(function(c){ cats[c.key] = { qty:0, wins:0, pending:0 }; });
+    var medusaItems = [], otherItems = [], allItems = [];
+    state.draws.forEach(function(d){
+      if(!inRange(d.date, range)) return;
+      d.pairs.forEach(function(p){
+        if(p.winner !== m.name) return;
+        var c = classifyPrize(p.prize, d.source);
+        var bucket = cats[c.cat];
+        bucket.qty += c.qty; bucket.wins += 1; if(!p.paid) bucket.pending += 1;
+        var item = { date: d.date, prize: p.prize, source: d.source, paid: !!p.paid, info: c };
+        allItems.push(item);
+        if(c.cat === 'medusa') medusaItems.push(item);
+        if(c.cat === 'outros') otherItems.push(item);
+      });
+    });
+    var byDateDesc = function(a,b){ return a.date < b.date ? 1 : (a.date > b.date ? -1 : 0); };
+    medusaItems.sort(byDateDesc); otherItems.sort(byDateDesc); allItems.sort(byDateDesc);
+    return { member: m, range: range, totalEvents: events.length, attended: attended.length, withLoot: withLoot.length,
+             byBoss: byBoss, cats: cats, medusaItems: medusaItems, otherItems: otherItems, allItems: allItems };
+  }
+
+  function renderPainelTab(){
+    var byName2 = function(a,b){ return a.name.localeCompare(b.name); };
+    var sorted = activeMembers().sort(byName2).concat(state.members.filter(function(m){ return !isActive(m); }).sort(byName2));
+    if(!painelMemberId || !state.members.some(function(m){ return m.id===painelMemberId; })){
+      painelMemberId = sorted.length ? sorted[0].id : null;
+    }
+    var html = '<div class="panel">';
+    html += '<div class="panel-title">Painel do membro</div>';
+    if(sorted.length === 0){ return html + '<div class="empty-msg">Cadastre membros para ver o painel.</div></div>'; }
+    html += '<div class="row">';
+    html += '<select id="painel-member" style="flex:2;min-width:160px;">';
+    sorted.forEach(function(m){ html += '<option value="'+m.id+'"'+(m.id===painelMemberId?' selected':'')+'>'+esc(m.name)+(isActive(m)?'':' (inativo)')+'</option>'; });
+    html += '</select>';
+    html += '<select id="painel-period" style="flex:1;min-width:140px;">';
+    [['tudo','Desde o início'],['mes','Este mês'],['mespassado','Mês passado'],['30d','Últimos 30 dias']].forEach(function(o){
+      html += '<option value="'+o[0]+'"'+(o[0]===painelPeriod?' selected':'')+'>'+o[1]+'</option>';
+    });
+    html += '</select>';
+    html += '</div></div>';
+    html += '<div id="painel-content">'+renderPainelContent()+'</div>';
+    return html;
+  }
+
+  function renderPainelContent(){
+    var D = computeMemberDashboard(painelMemberId);
+    if(!D) return '';
+    var pct = D.totalEvents ? Math.round((D.attended/D.totalEvents)*100) : 0;
+    var totalWins = D.allItems.length;
+    var pendingWins = D.allItems.filter(function(i){ return !i.paid; }).length;
+    var html = '';
+
+    html += '<div class="panel">';
+    html += '<div class="panel-title">'+esc(D.member.name)+(D.member.novato?' · <span class="mc-tag-new">NOVO</span>':'')+(!isActive(D.member)?' · <span class="mc-tag-new mc-tag-off">INATIVO</span>':'')+(D.range?' · '+esc(D.range.from)+' a '+esc(D.range.to):'')+'</div>';
+    html += '<div class="dash-stats">';
+    html += '<div class="dash-stat"><div class="ds-value">'+D.attended+' <span style="font-size:0.6em;color:var(--text-dim);">/ '+D.totalEvents+'</span></div><div class="ds-label">Presenças ('+pct+'%)</div></div>';
+    html += '<div class="dash-stat"><div class="ds-value">'+D.withLoot+'</div><div class="ds-label">Eventos com loot</div></div>';
+    html += '<div class="dash-stat"><div class="ds-value">'+totalWins+'</div><div class="ds-label">Prêmios ganhos</div></div>';
+    html += '<div class="dash-stat"><div class="ds-value"'+(pendingWins?' style="color:var(--danger-bright)"':'')+'>'+pendingWins+'</div><div class="ds-label">Pendentes de pagamento</div></div>';
+    html += '</div></div>';
+
+    var card = function(key, label, extraClass){
+      var c = D.cats[key];
+      var h = '<div class="dash-card'+(extraClass?' '+extraClass:'')+(c.qty===0?' zero':'')+'">';
+      h += '<div class="dc-label">'+esc(label)+'</div>';
+      h += '<div class="dc-value">'+c.qty+'</div>';
+      h += '<div class="dc-sub">'+(c.wins===1?'1 sorteio':c.wins+' sorteios')+(c.pending?' · <span class="dc-pend">'+c.pending+' a pagar</span>':'')+'</div>';
+      return h + '</div>';
+    };
+    var labelOf = function(k){ var f = PRIZE_CATEGORIES.find(function(c){ return c.key===k; }); return f ? f.label : k; };
+
+    html += '<div class="panel"><div class="panel-title">Prêmios ganhos</div><div class="dash-cards">';
+    MAIN_CATS.forEach(function(k){ html += card(k, labelOf(k)); });
+    html += card('medusa', 'Medusa', 'medusa');
+    html += '</div>';
+    var extras = EXTRA_CATS.filter(function(k){ return D.cats[k].wins > 0; });
+    if(extras.length || D.cats.outros.wins){
+      html += '<div class="result-label" style="margin:12px 0 6px;">Outros prêmios</div><div class="dash-cards">';
+      extras.forEach(function(k){ html += card(k, labelOf(k)); });
+      if(D.cats.outros.wins) html += card('outros', 'Outros');
+      html += '</div>';
+    }
+    html += '<div class="dash-note">Quantidade = soma das unidades (ex.: "10 SOUL" conta 10). Medusa conta 1 por item ganho.</div>';
+    html += '</div>';
+
+    html += '<div class="panel"><div class="panel-title">Prêmios de Medusa ('+D.medusaItems.length+')</div>';
+    if(D.medusaItems.length === 0){
+      html += '<div class="empty-msg">Nenhum prêmio de Medusa no período.</div>';
+    } else {
+      html += '<div class="dash-list">';
+      D.medusaItems.forEach(function(it){
+        var txt = it.info.desc ? it.info.desc : ((it.info.position ? it.info.position+'º lugar' : 'Item')+' — sem descrição do item');
+        html += '<div class="dash-item"><span class="di-date">'+esc(it.date)+'</span><span class="di-text">'+esc(txt)+'</span><span class="di-paid '+(it.paid?'yes':'no')+'">'+(it.paid?'pago':'a pagar')+'</span></div>';
+      });
+      html += '</div>';
+      var semDesc = D.medusaItems.filter(function(it){ return !it.info.desc; }).length;
+      if(semDesc) html += '<div class="dash-note">'+semDesc+' prêmio(s) de Medusa foram registrados só com a posição, sem o nome do ring/pendant.</div>';
+    }
+    html += '</div>';
+
+    var bosses = Object.keys(D.byBoss).sort(function(a,b){ return D.byBoss[b]-D.byBoss[a]; });
+    html += '<div class="panel"><div class="panel-title">Presença por boss</div>';
+    if(bosses.length === 0){
+      html += '<div class="empty-msg">Nenhuma presença no período.</div>';
+    } else {
+      var max = D.byBoss[bosses[0]];
+      html += '<div class="dash-bars">';
+      bosses.forEach(function(b){
+        html += '<div class="dash-bar-row"><span>'+esc(b)+'</span><div class="dash-bar-wrap"><div class="dash-bar-fill" style="width:'+Math.max(3, Math.round(D.byBoss[b]/max*100))+'%"></div></div><span class="dash-bar-count">'+D.byBoss[b]+'</span></div>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+
+    if(D.otherItems.length){
+      html += '<div class="panel"><div class="panel-title">Prêmios não classificados ('+D.otherItems.length+')</div><div class="dash-list">';
+      D.otherItems.forEach(function(it){
+        html += '<div class="dash-item"><span class="di-date">'+esc(it.date)+'</span><span class="di-text">'+esc(it.prize||'(sem nome)')+' <span style="color:var(--text-dim)">· '+esc(it.source||'')+'</span></span></div>';
+      });
+      html += '</div></div>';
+    }
+    return html;
+  }
+
+  function attachPainelListeners(){
+    var mSel = document.getElementById('painel-member');
+    var pSel = document.getElementById('painel-period');
+    var refresh = function(){
+      var c = document.getElementById('painel-content');
+      if(c) c.innerHTML = renderPainelContent();
+    };
+    if(mSel) mSel.addEventListener('change', function(){ painelMemberId = this.value; this.blur(); refresh(); });
+    if(pSel) pSel.addEventListener('change', function(){ painelPeriod = this.value; this.blur(); refresh(); });
+  }
 
   function renderRankingTab(){
     var html = '';
@@ -1730,7 +2268,7 @@
     if(!container) return;
     var typeSel = document.getElementById('ranking-period-type');
     var type = typeSel ? typeSel.value : 'semana';
-    var today = new Date().toISOString().slice(0,10);
+    var today = localToday();
     var html = '';
     if(type === 'dia'){
       html = '<input type="date" id="ranking-period-input" value="'+today+'" style="width:100%;">';
@@ -1765,8 +2303,8 @@
 
     var rows = state.members.map(function(m){
       var count = eventsInPeriod.filter(function(ev){ return ev.attendees.indexOf(m.id) !== -1; }).length;
-      return { name: m.name, count: count };
-    }).sort(function(a,b){
+      return { name: m.name, count: count, inactive: !isActive(m) };
+    }).filter(function(r){ return !r.inactive || r.count > 0; }).sort(function(a,b){
       if(b.count !== a.count) return b.count - a.count;
       return a.name.localeCompare(b.name);
     });
@@ -1797,7 +2335,7 @@
                        'linear-gradient(90deg, #5c1810, var(--danger))';
         html += '<div class="ranking-row'+(isZero?' zero':'')+'">';
         html += '<span class="ranking-pos">#'+(idx+1)+'</span>';
-        html += '<span class="ranking-name">'+(isZero?'💀 ':'')+esc(r.name)+'</span>';
+        html += '<span class="ranking-name">'+(isZero?'💀 ':'')+esc(r.name)+(r.inactive?' <span class="mc-tag-new mc-tag-off">INATIVO</span>':'')+'</span>';
         html += '<div class="ranking-bar-wrap"><div class="ranking-bar-fill" style="width:'+pct+'%; background:'+barColor+';"></div></div>';
         html += '<span class="ranking-count">'+r.count+'/'+totalEvents+'</span>';
         html += '</div>';
@@ -1839,7 +2377,7 @@
     html += '<select id="historico-member-filter" style="width:100%;" onchange="window.__muRerenderHistorico()">';
     html += '<option value="todos">Todos os membros (presentes/ausentes por evento)</option>';
     state.members.slice().sort(function(a,b){return a.name.localeCompare(b.name);}).forEach(function(m){
-      html += '<option value="'+m.id+'">'+esc(m.name)+' — cobrar faltas/reconhecer presenças</option>';
+      html += '<option value="'+m.id+'">'+esc(m.name)+(isActive(m)?'':' (inativo)')+' — cobrar faltas/reconhecer presenças</option>';
     });
     html += '</select>';
     html += '</div>';
@@ -1890,7 +2428,7 @@
     }
 
     state.events.forEach(function(ev){
-      var absentMembers = state.members.filter(function(m){ return ev.attendees.indexOf(m.id) === -1; });
+      var absentMembers = state.members.filter(function(m){ return isActive(m) && ev.attendees.indexOf(m.id) === -1; });
       var presentMembers = state.members.filter(function(m){ return ev.attendees.indexOf(m.id) !== -1; });
       var isOpen = openHistoricoEventId === ev.id;
 
@@ -1980,7 +2518,7 @@
     html += '<select id="payments-member-filter" style="flex:1;min-width:160px;" onchange="window.__muRerenderPayments()">';
     html += '<option value="todos">Todos os membros</option>';
     state.members.slice().sort(function(a,b){return a.name.localeCompare(b.name);}).forEach(function(m){
-      html += '<option value="'+m.id+'">'+esc(m.name)+'</option>';
+      html += '<option value="'+m.id+'">'+esc(m.name)+(isActive(m)?'':' (inativo)')+'</option>';
     });
     html += '</select>';
     html += '<select id="payments-event-filter" style="flex:1;min-width:160px;" onchange="window.__muRerenderPayments()">';
@@ -2077,6 +2615,8 @@
       });
     }
 
+    attachPainelListeners();
+
     document.querySelectorAll('.tab-btn').forEach(function(btn){
       btn.addEventListener('click', function(){
         activeTab = this.getAttribute('data-tab');
@@ -2141,6 +2681,53 @@
       el.addEventListener('click', function(){
         var parts = this.getAttribute('data-toggle-attend').split('|');
         toggleAttendance(parts[0], parts[1]);
+      });
+    });
+
+    document.querySelectorAll('[data-toggle-loot]').forEach(function(el){
+      el.addEventListener('click', function(){
+        var parts = this.getAttribute('data-toggle-loot').split('|');
+        toggleLoot(parts[0], parts[1]);
+      });
+    });
+
+    document.querySelectorAll('[data-edit-member]').forEach(function(el){
+      el.addEventListener('click', function(){
+        editingMemberId = this.getAttribute('data-edit-member');
+        pendingDelete = null;
+        render();
+        var inp = document.getElementById('edit-member-input');
+        if(inp){ inp.focus(); inp.select(); }
+      });
+    });
+
+    var saveEdit = function(id){
+      var inp = document.getElementById('edit-member-input');
+      if(!inp) return;
+      if(renameMember(id, inp.value)){ editingMemberId = null; render(); }
+      else { inp.focus(); }
+    };
+    document.querySelectorAll('[data-save-member]').forEach(function(el){
+      el.addEventListener('click', function(){ saveEdit(this.getAttribute('data-save-member')); });
+    });
+    document.querySelectorAll('[data-cancel-edit]').forEach(function(el){
+      el.addEventListener('click', function(){ editingMemberId = null; render(); });
+    });
+    var editInput = document.getElementById('edit-member-input');
+    if(editInput){
+      editInput.addEventListener('keydown', function(e){
+        if(e.key === 'Enter') saveEdit(this.getAttribute('data-edit-input'));
+        if(e.key === 'Escape'){ editingMemberId = null; render(); }
+      });
+    }
+
+    document.querySelectorAll('[data-toggle-active]').forEach(function(el){
+      el.addEventListener('click', function(){ toggleActive(this.getAttribute('data-toggle-active')); });
+    });
+
+    document.querySelectorAll('[data-toggle-novato]').forEach(function(el){
+      el.addEventListener('click', function(){
+        toggleNovato(this.getAttribute('data-toggle-novato'));
       });
     });
 
